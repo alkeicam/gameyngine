@@ -1,6 +1,6 @@
 {
   "name": "gameyngine",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "GameYngine - TypeScript Strategy Game Engine",
   "main": "dist/gameyngine.umd.js",
   "types": "dist/gameyngine.d.ts",
