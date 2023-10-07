@@ -10,7 +10,7 @@ import { EventEmitter } from "./util/events.notest";
 export { TileBase, TileBaseDefault, TileBaseDirected, TileBaseExtended, TileBaseNFT, TileBasePlace, TileTerrain, TileTerrainLand, TileTerrainWater } from "./logic/map/common.notest";
 export { TileTerrainLandKind, TileTerrainLandModifications, TileTerrainWaterKind, TileTerrainWaterModifications  } from "./logic/map/common.notest";
 export { MapBase, MapHexOddQ, MapSquare, Neighbour, Path, Paths} from "./logic/map/map"
-export { CostCalculatorConst, CostCalculatorTerrain } from "./logic/map/costs"
+export { CostCalculatorConst, CostCalculatorTerrain, CostCalculator, TerrainCost } from "./logic/map/costs"
 export { ActionBase, ActionContext, ActionContextUnitAttack, ActionContextUnitMove, ActionUnit, ActionUnitAttack, ActionUnitFieldOfView, ActionUnitFortify, ActionUnitLandFieldOfView, ActionUnitMove, Autonomous} from "./logic/units/actions/action"
 export { UnitPosition, UnitPositions } from "./logic/units/positions"
 export { ActionRunner, Actionable, Specs, SpecsBase, SpecsFlag, SpecsLocation, SpecsType, UnitActionable, UnitBase, UnitSpecs } from "./logic/units/unit"
