@@ -16,11 +16,11 @@ import sinon, { SinonStub } from 'sinon';
 
 import {TileBase} from '../src/logic/map/common.notest'
 import {MapBase, MapHexOddQ, MapSquare, Neighbour, Path, Paths,} from '../src/logic/map/map'
-import {MapsMocks, TerrainMocks} from './data.mock'
+import {MapsFileMocks, MapsMocks, TerrainMocks} from './data.mock'
 import {CostCalculator, CostCalculatorConst, CostCalculatorTerrain} from "../src/logic/map/costs"
 import {ActionContextUnitAttack, ActionContextUnitMove, ActionUnitAttack, ActionUnitFortify, ActionUnitLandFieldOfView, ActionUnitMove} from "../src/logic/units/actions/action"
 import { SpecsBase, SpecsLocation } from '../src/logic/units/unit';
-
+import {Utils} from "../src/util/utils";
 import { EventEmitter, messageBus } from '../src/util/events.notest';
 import { Events } from '../src/util/eventDictionary.notest';
 
@@ -135,10 +135,7 @@ describe('GameYngine', () => {
             
         })
         
-        describe('fromTiles', () => {   
-            
-            
-            
+        describe('fromTiles', () => {                           
             beforeEach(() => {  
                                 
             });
@@ -166,6 +163,7 @@ describe('GameYngine', () => {
                 return expect(()=>{mappy.fromTiles(MapsMocks.map_5x6)}).to.throw('Invalid arguments');                              
             }) 
         })
+        
         describe('neighbours', () => {   
             let mappy:MapSquare;
             const width:number =  5;
@@ -600,6 +598,35 @@ describe('GameYngine', () => {
             
         })
         
+        describe('fromJson', () => {                           
+            beforeEach(() => {  
+                                
+            });
+            afterEach(() => {                  
+            });
+
+            it('map size', () => {    
+                let mappy:MapHexOddQ = new MapHexOddQ(8, 5);
+                mappy.fromJson(MapsFileMocks.map_8x5);
+                return expect(Array.from(mappy.theMap).length).eq(40);                
+            })   
+            
+            
+
+            it('size check #2', () => {    
+                let mappy:MapHexOddQ = new MapHexOddQ(4, 4);
+                return expect(()=>{mappy.fromJson(MapsFileMocks.map_8x5)}).to.throw('Invalid arguments');                              
+            }) 
+            
+            it('tiles array with 0 tiles', () => {    
+                let mappy:MapHexOddQ = new MapHexOddQ(8, 5);
+                return expect(()=>{mappy.fromJson(MapsFileMocks.map_8x5_0_tiles)}).to.throw('must contain tiles data');                              
+            }) 
+            it('no tiles provided', () => {    
+                let mappy:MapHexOddQ = new MapHexOddQ(8, 5);
+                return expect(()=>{mappy.fromJson(MapsFileMocks.map_8x5_no_tiles)}).to.throw('must contain tiles data');                              
+            }) 
+        })
         
         describe('neighbours', () => {   
             let mappy:MapHexOddQ;
@@ -1354,6 +1381,14 @@ describe('GameYngine', () => {
             
         })
         
+    })
+    describe("Utils",()=>{
+        it("parses qr string to x,y object",()=>{
+            const xy = Utils.qrStringToTileXY("3,1");
+
+            expect(xy.x).eq(3);
+            expect(xy.y).eq(1);
+        })
     })
 })
 

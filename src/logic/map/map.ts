@@ -4,11 +4,20 @@ import { PriorityQueue } from "./queue.notest";
 import { Node } from "./queue.notest"
 
 
+export interface MapSpecs {
+    id: string, // unique id of the map   
+    name: string, // name of the map
+    kind: string, // one of HexTile or QuadTile
+    size: string, // size of map in "widthxheight" format i.e. 10x5
+    tags: string[], // additional tags assigned with map
+    address: string, // when map resembles real world place this contains it's address
+    latlon: string[], // when map resembles real world place this contains it's location        
+}
 
-
-
-
-
+export interface MapFile {
+    specs: MapSpecs, // map basic data
+    tiles?: TileBase[] // tiles specifications    
+}
 
 
 interface PathResult {
@@ -72,6 +81,13 @@ export abstract class MapBase {
             this.theMap.set(item.id, item);
         })
         
+    }
+
+    fromJson(data:MapFile):void{
+        if(!data.tiles) throw new Error("Json must contain tiles data");
+        if(data.tiles.length == 0) throw new Error("Json must contain tiles data");
+
+        this.fromTiles(data.tiles);
     }
 
     put(tile: TileBase):void{
