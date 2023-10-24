@@ -1,5 +1,6 @@
-import { Events } from "../../../util/eventDictionary.notest";
-import { EventEmitter, EventProducer } from "../../../util/events.notest";
+import EventEmitter from "eventemitter3";
+import { GameygineEvents } from "../../../util/eventDictionary.notest";
+
 import { TileBase } from "../../map/common.notest";
 import { CostCalculator, CostCalculatorTerrain, TerrainCost } from "../../map/costs";
 import { MapBase, Path, Paths } from "../../map/map";
@@ -16,7 +17,7 @@ export interface ActionContextUnitAttack extends ActionContext {
     targetTile: TileBase
 }
 
-export abstract class ActionBase implements EventProducer{
+export abstract class ActionBase{
     emitter: EventEmitter;  
     code: string; // unique action code
 
@@ -68,8 +69,8 @@ export class ActionUnitMove extends ActionUnit{
         const path = paths.paths.get(_context.to);
         if(!path)
             throw new Error(`Path not found to ${_context.to.id}`);
-        this.emitter.emit(Events.UNIT.POSITION, this.specs, path.target);
-        this.emitter.emit(Events.UNIT.CONSUME_AP, this.specs, path.cost);        
+        this.emitter.emit(GameygineEvents.UNIT.POSITION, this.specs, path.target);
+        this.emitter.emit(GameygineEvents.UNIT.CONSUME_AP, this.specs, path.cost);        
     }
 }
 
@@ -92,9 +93,9 @@ export class ActionUnitAttack extends ActionUnit{
         
         const nearEnemyTile = path.steps[path.steps.length-2];
         
-        this.emitter.emit(Events.UNIT.POSITION, this.specs, nearEnemyTile);
-        this.emitter.emit(Events.UNIT.BATTLE, this.specs, _context.target, _context.targetTile);
-        this.emitter.emit(Events.UNIT.CONSUME_AP, this.specs, path.cost);               
+        this.emitter.emit(GameygineEvents.UNIT.POSITION, this.specs, nearEnemyTile);
+        this.emitter.emit(GameygineEvents.UNIT.BATTLE, this.specs, _context.target, _context.targetTile);
+        this.emitter.emit(GameygineEvents.UNIT.CONSUME_AP, this.specs, path.cost);               
     }   
 }
 
@@ -130,8 +131,8 @@ export class ActionUnitFortify extends ActionUnit{
     }  
     perform(): void {
         const actionPoints = this._actionCost();
-        this.emitter.emit(Events.UNIT.RUNNER_ACTION, this.specs, this);
-        this.emitter.emit(Events.UNIT.CONSUME_AP, this.specs, actionPoints);                   
+        this.emitter.emit(GameygineEvents.UNIT.RUNNER_ACTION, this.specs, this);
+        this.emitter.emit(GameygineEvents.UNIT.CONSUME_AP, this.specs, actionPoints);                   
     }  
 }
 
@@ -158,7 +159,7 @@ export class ActionUnitFieldOfView extends ActionUnit implements Autonomous{
         })
 
         fovTiles.push(fovPaths.origin);
-        this.emitter.emit(Events.MAP.FOV,fovTiles);
+        this.emitter.emit(GameygineEvents.MAP.FOV,fovTiles);
         // emit(MAP_FOV, fovTiles) 
         
     }  

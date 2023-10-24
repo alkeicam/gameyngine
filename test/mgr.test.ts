@@ -21,10 +21,11 @@ import {CostCalculator, CostCalculatorConst, CostCalculatorTerrain} from "../src
 import {ActionContextUnitAttack, ActionContextUnitMove, ActionUnitAttack, ActionUnitFortify, ActionUnitLandFieldOfView, ActionUnitMove} from "../src/logic/units/actions/action"
 import { SpecsBase, SpecsLocation } from '../src/logic/units/unit';
 import {Utils} from "../src/util/utils";
-import { EventEmitter, messageBus } from '../src/util/events.notest';
-import { Events } from '../src/util/eventDictionary.notest';
 
+import { GameygineEvents } from '../src/util/eventDictionary.notest';
+import EventEmitter from 'eventemitter3';
 
+const messageBus = new EventEmitter();
 
 
 
@@ -869,7 +870,7 @@ describe('GameYngine', () => {
                 const a = new ActionUnitLandFieldOfView(unit,unit,terrainCost, map, messageBusMocked); 
                 a.perform({});
                 const call = s2.getCall(0);
-                return expect(call.args[0]).eq(Events.MAP.FOV);                
+                return expect(call.args[0]).eq(GameygineEvents.MAP.FOV);                
             })
             it('there are fov tiles', () => {  
                 
@@ -1005,7 +1006,7 @@ describe('GameYngine', () => {
                 a.perform();                 
                 const call = s2.getCall(0);
 
-                return expect(call.args[0]).eq(Events.UNIT.RUNNER_ACTION)                
+                return expect(call.args[0]).eq(GameygineEvents.UNIT.RUNNER_ACTION)                
             })
 
             it('fortification consumes all action points', () => {                                 
@@ -1014,7 +1015,7 @@ describe('GameYngine', () => {
                 a.perform();                 
                 const call = s2.getCall(1);
 
-                return expect(call.args[0]).eq(Events.UNIT.CONSUME_AP)                
+                return expect(call.args[0]).eq(GameygineEvents.UNIT.CONSUME_AP)                
             })
             it('has code set', () => {                                                 
                 const a = new ActionUnitFortify(unit2,unit2,messageBusMocked); 
@@ -1164,7 +1165,7 @@ describe('GameYngine', () => {
                 const a = new ActionUnitAttack(unit,unit,terrainCost, map, messageBusMocked); 
                 a.perform(actionContext1);
                 const call = s2.getCall(0);
-                return expect(call.args[0]).eq(Events.UNIT.POSITION)
+                return expect(call.args[0]).eq(GameygineEvents.UNIT.POSITION)
                 
             })
             it('moves attacker near target', () => {                                 
@@ -1324,7 +1325,7 @@ describe('GameYngine', () => {
                 const a = new ActionUnitMove(unit,unit,terrainCost, map, messageBusMocked); 
                 a.perform(actionContext1);
                 const call = s2.getCall(0);
-                return expect(call.args[0]).eq(Events.UNIT.POSITION)
+                return expect(call.args[0]).eq(GameygineEvents.UNIT.POSITION)
                 
             })
             it('moves to destination tile', () => {                                 
@@ -1358,7 +1359,7 @@ describe('GameYngine', () => {
                 const a = new ActionUnitMove(unit,unit,terrainCost, map, messageBusMocked); 
                 a.perform(actionContext1);
                 const call = s2.getCall(1);
-                return expect(call.args[0]).eq(Events.UNIT.CONSUME_AP)
+                return expect(call.args[0]).eq(GameygineEvents.UNIT.CONSUME_AP)
                 
             })
             it('consumes action points accordingly', () => {                                 

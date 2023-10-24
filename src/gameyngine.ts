@@ -1,10 +1,11 @@
 
+import EventEmitter from "eventemitter3";
 import { TileBase } from "./logic/map/common.notest";
 import { ActionBase } from "./logic/units/actions/action";
 import { UnitPosition, UnitPositions } from "./logic/units/positions";
 import { SpecsBase, UnitBase } from "./logic/units/unit";
-import { Events } from "./util/eventDictionary.notest";
-import { EventEmitter } from "./util/events.notest";
+import { GameygineEvents } from "./util/eventDictionary.notest";
+
 
 
 export { TileBase, TileBaseDefault, TileBaseDirected, TileBaseExtended, TileBaseNFT, TileBasePlace, TileTerrain, TileTerrainLand, TileTerrainWater } from "./logic/map/common.notest";
@@ -14,7 +15,7 @@ export { CostCalculatorConst, CostCalculatorTerrain, CostCalculator, TerrainCost
 export { ActionBase, ActionContext, ActionContextUnitAttack, ActionContextUnitMove, ActionUnit, ActionUnitAttack, ActionUnitFieldOfView, ActionUnitFortify, ActionUnitLandFieldOfView, ActionUnitMove, Autonomous} from "./logic/units/actions/action"
 export { UnitPosition, UnitPositions } from "./logic/units/positions"
 export { ActionRunner, Actionable, Specs, SpecsBase, SpecsFlag, SpecsLocation, SpecsType, UnitActionable, UnitBase, UnitSpecs } from "./logic/units/unit"
-export {Events} from './util/eventDictionary.notest'
+export {GameygineEvents as Events} from './util/eventDictionary.notest'
 export {Utils} from "./util/utils"
 
 export interface BattleActor {
@@ -43,11 +44,11 @@ export class GameYngine {
   }
 
   _bindGameEvents() {
-    this.emitter.on(Events.MAP.FOV, this._onMapFov.bind(this));
-    this.emitter.on(Events.UNIT.BATTLE, this._onUnitBattle.bind(this));
-    this.emitter.on(Events.UNIT.CONSUME_AP, this._onUnitConsumeAp.bind(this));
-    this.emitter.on(Events.UNIT.POSITION, this._onUnitPosition.bind(this));
-    this.emitter.on(Events.UNIT.RUNNER_ACTION, this._onUnitRunnerAction.bind(this));
+    this.emitter.on(GameygineEvents.MAP.FOV, this._onMapFov.bind(this));
+    this.emitter.on(GameygineEvents.UNIT.BATTLE, this._onUnitBattle.bind(this));
+    this.emitter.on(GameygineEvents.UNIT.CONSUME_AP, this._onUnitConsumeAp.bind(this));
+    this.emitter.on(GameygineEvents.UNIT.POSITION, this._onUnitPosition.bind(this));
+    this.emitter.on(GameygineEvents.UNIT.RUNNER_ACTION, this._onUnitRunnerAction.bind(this));
   }
 
   _onMapFov() {
@@ -61,10 +62,10 @@ export class GameYngine {
 
     if(battleOutcome.casualties && battleOutcome.defender.damage.casualty){
       // in case defender is dead then attacker takes it's position      
-      this.emitter.emit(Events.UNIT.POSITION,battleOutcome.attacker.unit, targetTile)
+      this.emitter.emit(GameygineEvents.UNIT.POSITION,battleOutcome.attacker.unit, targetTile)
     }
 
-    this.emitter.emit(Events.ENGINE.BATTLE_OUTCOME, battleOutcome);
+    this.emitter.emit(GameygineEvents.ENGINE.BATTLE_OUTCOME, battleOutcome);
 
   }
   _onUnitConsumeAp(unit: SpecsBase, howMuch: number) {

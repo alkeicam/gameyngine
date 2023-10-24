@@ -1,4 +1,4 @@
-export const Events = {
+export const GameygineEvents = {
     UNIT: {
         POSITION: "unit:position", // (unit: SpecBase, whereTo: TileBase)  
         CONSUME_AP: "unit:consume:ap", // (unit:SpecsBase, howMuch: number)

@@ -35,6 +35,9 @@
   ],
   "author": "Maciej Grula",
   "license": "MIT",
+  "dependencies": {
+    "eventemitter3": "^5.0.1"
+  },
   "devDependencies": {
     "@rollup/plugin-typescript": "^6.1.0",
     "@types/chai": "4.2.14",
