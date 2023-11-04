@@ -928,3 +928,38 @@ export const UnitsMocks = {
         }
     }
 }
+
+export const TileMocks = {
+    tile_3_2: {
+        "id": "3,2",
+        "x": 3,
+        "y": 2,                
+        "t": {
+            "kind": "UNDEFINED"
+        }
+    },
+    tile_2_3:{
+        "id": "2,3",
+        "x": 2,
+        "y": 3,                
+        "t": {
+            "kind": "UNDEFINED"
+        }
+    },
+    tile_5_0: {
+        "id": "5,0",
+        "x": 5,
+        "y": 0,
+        "t": {
+            "kind": "UNDEFINED"
+        }
+    },
+    tile_0_4: {
+        "id": "0,4",
+        "x": 0,
+        "y": 4,
+        "t": {
+            "kind": "UNDEFINED"
+        }
+    }
+}

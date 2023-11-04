@@ -16,7 +16,7 @@ import sinon, { SinonStub } from 'sinon';
 
 import {TileBase} from '../src/logic/map/common.notest'
 import {MapBase, MapHexOddQ, MapSquare, Neighbour, Path, Paths,} from '../src/logic/map/map'
-import {MapsFileMocks, MapsMocks, TerrainMocks} from './data.mock'
+import {MapsFileMocks, MapsMocks, TerrainMocks, TileMocks} from './data.mock'
 import {CostCalculator, CostCalculatorConst, CostCalculatorTerrain} from "../src/logic/map/costs"
 import {ActionContextUnitAttack, ActionContextUnitMove, ActionUnitAttack, ActionUnitFortify, ActionUnitLandFieldOfView, ActionUnitMove} from "../src/logic/units/actions/action"
 import { SpecsBase, SpecsLocation } from '../src/logic/units/unit';
@@ -577,6 +577,7 @@ describe('GameYngine', () => {
             })
         })
         
+        
     })
 
     describe('MapHeqOddQ', () => {   
@@ -795,7 +796,51 @@ describe('GameYngine', () => {
 
             // })
             
-        })        
+        })  
+        describe("tiles within range",()=>{
+            let mappy:MapHexOddQ;
+            let width:number = 6
+            let height: number = 5
+            let calculator:CostCalculator;
+            beforeEach(()=>{                
+                calculator = new CostCalculatorConst(1);
+                mappy = new MapHexOddQ(height, width); 
+                mappy.fromTiles(MapsMocks.map_6x5) 
+            })
+            it("results proper tiles #1",()=>{
+                const result = mappy.tilesWithinRange(calculator, [TileMocks.tile_3_2, TileMocks.tile_2_3], 1);
+                expect(result.length).eq(8);
+                expect(JSON.stringify(result)).includes('"id":"3,1"')
+                expect(JSON.stringify(result)).includes('"id":"4,2"')
+                expect(JSON.stringify(result)).includes('"id":"4,3"')
+                expect(JSON.stringify(result)).includes('"id":"3,3"')
+                expect(JSON.stringify(result)).includes('"id":"2,4"')
+                expect(JSON.stringify(result)).includes('"id":"1,3"')
+                expect(JSON.stringify(result)).includes('"id":"1,2"')
+                expect(JSON.stringify(result)).includes('"id":"2,2"')
+            })
+            it("results proper tiles #1",()=>{
+                const result = mappy.tilesWithinRange(calculator, [TileMocks.tile_5_0, TileMocks.tile_0_4], 1);
+                expect(result.length).eq(6);
+                // expect(JSON.stringify(result)).includes('"id":"3,1"')
+                // expect(JSON.stringify(result)).includes('"id":"4,2"')
+                // expect(JSON.stringify(result)).includes('"id":"4,3"')
+                // expect(JSON.stringify(result)).includes('"id":"3,3"')
+                // expect(JSON.stringify(result)).includes('"id":"2,4"')
+                // expect(JSON.stringify(result)).includes('"id":"1,3"')
+                // expect(JSON.stringify(result)).includes('"id":"1,2"')
+                // expect(JSON.stringify(result)).includes('"id":"2,2"')
+            })
+            it("does not contains source/from tiles",()=>{
+                const result = mappy.tilesWithinRange(calculator, [TileMocks.tile_3_2, TileMocks.tile_2_3], 1);
+                
+                expect(JSON.stringify(result)).not.includes('id:"3,2"')
+                expect(JSON.stringify(result)).not.includes('id:"2,3"')
+                
+            })
+            it("does not contain duplicates")
+            
+        })      
     })
 
     describe('CostCalculatorConst',()=>{

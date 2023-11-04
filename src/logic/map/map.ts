@@ -186,6 +186,32 @@ export abstract class MapBase {
         return this.paths(calculator, from, undefined, range);        
     }
 
+    /**
+     * Returns all tiles within range from a group of source/from tiles (excluding source/from tiles)
+     * @param calculator cost calculator for range check
+     * @param from array of from/source tiles
+     * @param range nominal/border cost value, all tiles with cost lower than range will be returned
+     */
+    tilesWithinRange(calculator: CostCalculator, from:TileBase[], range: number):TileBase[]{
+        const resultTiles:TileBase[] = [];
+
+        for(let i=0; i<from.length; i++){
+            const source = from[i];
+            const iPath = this.range(calculator, source, range);
+            iPath.paths.forEach((_path, targetTile)=>{
+                if(
+                    // no duplicates
+                    resultTiles.findIndex(item=>item.id == targetTile.id)==-1
+                    // target tile is not any of the from tiles
+                    && from.findIndex(item=>item.id == targetTile.id)==-1
+                )
+                    resultTiles.push(targetTile);
+            })
+        }
+        return resultTiles;
+        
+    }
+
     paths(calculator: CostCalculator, from:TileBase, to?: TileBase,  costLimit?: number):Paths{
         let pathResult: PathResult = this.pathFind(calculator, from, to, costLimit);        
         return this._traversePaths(pathResult);
