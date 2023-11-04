@@ -495,6 +495,87 @@ describe('GameYngine', () => {
 
 
         })
+        describe("putting tile",()=>{
+            let mappy:MapSquare;
+            let width:number;
+            let height: number;
+            beforeEach(()=>{
+                width = 3;
+                height = 2;
+                mappy = new MapSquare(height, width);
+            })
+            it("replaces existing tile",()=>{
+                mappy.put({
+                    id: "0,0",
+                    x: 0,
+                    y: 0,
+                    t: {kind: "UNDEFINED"}                    
+                })
+                mappy.put({
+                    id: "1,0",
+                    x: 1,
+                    y: 0,
+                    t: {kind: "UNDEFINED"}                    
+                })
+                mappy.put({
+                    id: "1,0",
+                    x: 0,
+                    y: 0,
+                    t: {kind: "OTHER"}                    
+                })
+                expect(mappy.tile("1,0").t.kind).eq("OTHER")
+                expect(mappy.theMap.size).eq(2)
+            })
+            it("adds new tile",()=>{
+                mappy.put({
+                    id: "0,0",
+                    x: 0,
+                    y: 0,
+                    t: {kind: "UNDEFINED"}                    
+                })
+                mappy.put({
+                    id: "1,0",
+                    x: 1,
+                    y: 0,
+                    t: {kind: "UNDEFINED"}                    
+                })
+                expect(mappy.theMap.size).eq(2)
+                expect(mappy.tile("0,0").t.kind).eq("UNDEFINED")
+                expect(mappy.tile("1,0").t.kind).eq("UNDEFINED")
+            })            
+            it("throws error when putting a tile at location not supported by map width",()=>{
+                return expect(()=>{mappy.put.bind(mappy)({
+                    id: "4,0",
+                    x: 4,
+                    y: 0,
+                    t: {kind: "UNDEFINED"}                    
+                })}).to.throw("violates map size");                    
+            })
+            it("throws error when putting a tile at negative location not supported by map width",()=>{
+                return expect(()=>{mappy.put.bind(mappy)({
+                    id: "-4,0",
+                    x: -4,
+                    y: 0,
+                    t: {kind: "UNDEFINED"}                    
+                })}).to.throw("violates map size");                    
+            })
+            it("throws error when putting a tile at location not supported by map height",()=>{
+                return expect(()=>{mappy.put.bind(mappy)({
+                    id: "0,3",
+                    x: 0,
+                    y: 3,
+                    t: {kind: "UNDEFINED"}                    
+                })}).to.throw("violates map size");                    
+            })
+            it("throws error when putting a tile at negative location not supported by map height",()=>{
+                return expect(()=>{mappy.put.bind(mappy)({
+                    id: "0,-1",
+                    x: 0,
+                    y: -1,
+                    t: {kind: "UNDEFINED"}                    
+                })}).to.throw("violates map size");                    
+            })
+        })
         
     })
 

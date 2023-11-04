@@ -17,7 +17,7 @@
     }
   },
   "scripts": {
-    "docs": "typedoc && touch docs/.nojekyll",
+    "docs": "typedoc --entryPointStrategy expand ./src && touch docs/.nojekyll",
     "build:types": "tsc -t esnext --moduleResolution node -d --emitDeclarationOnly --outFile dist/gameyngine.d.ts src/gameyngine.ts",
     "build:js": "rollup -c rollup.config.js",
     "build:minjs:umd": "terser dist/gameyngine.umd.js --compress --mangle > dist/gameyngine.umd.min.js",
@@ -57,7 +57,7 @@
     "rollup": "^2.79.1",
     "sinon": "^9.2.4",
     "terser": "^5.19.2",
-    "ts-node": "10.8.1",
+    "ts-node": "10.8.2",
     "tslib": "^2.6.2",
     "typedoc": "^0.25.1",
     "typescript": "^5.1.6",

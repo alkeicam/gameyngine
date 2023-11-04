@@ -92,13 +92,22 @@ export abstract class MapBase {
 
     put(tile: TileBase):void{
         
-        if(!this.theMap.has(tile.id)){
-            if(this.theMap.values.length == this.height*this.width)
-                throw new Error(`Can't add tile ${tile.id} as size exceeded.`)
-        }else{
-            // when key exists simply replace
-            this.theMap.set(tile.id, tile);
-        }    
+        // if(!this.theMap.has(tile.id)){
+        //     if(this.theMap.values.length == this.height*this.width)
+        //         throw new Error(`Can't add tile ${tile.id} as size exceeded.`)
+        // }
+        if(tile.x<0)
+            throw new Error(`Can't add tile ${tile.id} as it's x position ${tile.x} violates map size 0,${this.width}.`)
+        if(tile.y<0)
+            throw new Error(`Can't add tile ${tile.id} as it's x position ${tile.y} violates map size 0,${this.height}.`)
+        if(tile.x>this.width-1)
+            throw new Error(`Can't add tile ${tile.id} as it's x position ${tile.x} violates map size 0,${this.width}.`)
+        if(tile.y>this.height-1)
+            throw new Error(`Can't add tile ${tile.id} as it's y position ${tile.y} violates map size 0,${this.height}.`)
+        
+        // will add new or replace existing tile
+        this.theMap.set(tile.id, tile);
+        
     }
 
     abstract neighbours(origin: TileBase):Neighbour[];
