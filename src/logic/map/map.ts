@@ -66,7 +66,7 @@ export abstract class MapBase {
     tile(id:string):TileBase{
         const tile =  this.theMap.get(id);
         if(!tile)
-            throw new Error("Tile not found");
+            throw new Error(`Tile not found ${id}`);
 
         return tile;
     }

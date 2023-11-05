@@ -1,5 +1,7 @@
 import { TileBase, TileTerrain } from "./common.notest";
-
+/**
+ * Base implementation of TileBase
+ */
 export class Tile implements TileBase {
     id: string;
     x: number;
@@ -15,5 +17,20 @@ export class Tile implements TileBase {
         }
         this.r = renderableCode
         this.id = `${x},${y}`
+    }
+    /**
+     * Creates a tile with given attributes.
+     * @param x 
+     * @param y 
+     * @param terrainKind 
+     * @param modifications 
+     * @param renderableCode 
+     * @returns {Tile} newly created tile
+     */
+    static withModifications(x:number,y: number,terrainKind: string, modifications: string[], renderableCode?: string){
+        const tile = new Tile(x,y, terrainKind, renderableCode);
+        tile.t.modifications = modifications
+
+        return tile;
     }
 }

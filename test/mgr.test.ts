@@ -1441,6 +1441,18 @@ describe('GameYngine', () => {
             expect(xy.y).eq(1);
         })
     })
+
+    describe("Tile",()=>{
+        it("is created with proper id, x, y, modifications and kind",()=>{
+            const tile = Tile.withModifications(2,1,"ANY",["MOD1", "MOD2"]);
+            expect(tile.t.modifications![0]).eq("MOD1");
+            expect(tile.t.modifications![1]).eq("MOD2");
+            expect(tile.t.kind).eq("ANY");
+            expect(tile.x).eq(2);
+            expect(tile.y).eq(1);
+            expect(tile.id).eq("2,1");
+        })
+    })
 })
 
 
