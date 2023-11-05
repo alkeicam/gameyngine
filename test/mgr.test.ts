@@ -732,7 +732,7 @@ describe('GameYngine', () => {
                 mappy = new MapHexOddQ(height, width); 
                 mappy.fromTiles(MapsMocks.map_6x5) 
             })
-            it("results proper tiles #1",()=>{
+            it("results proper tiles for nearing tiles and no duplicates",()=>{
                 const result = mappy.tilesWithinRange(calculator, [TileMocks.tile_3_2, TileMocks.tile_2_3], 1);
                 expect(result.length).eq(8);
                 expect(JSON.stringify(result)).includes('"id":"3,1"')
@@ -744,7 +744,7 @@ describe('GameYngine', () => {
                 expect(JSON.stringify(result)).includes('"id":"1,2"')
                 expect(JSON.stringify(result)).includes('"id":"2,2"')
             })
-            it("results proper tiles #1",()=>{
+            it("results proper tiles for non nearing tiles and no duplicates",()=>{
                 const result = mappy.tilesWithinRange(calculator, [TileMocks.tile_5_0, TileMocks.tile_0_4], 1);
                 expect(result.length).eq(6);
                 expect(JSON.stringify(result)).includes('"id":"4,0"')
@@ -762,7 +762,7 @@ describe('GameYngine', () => {
                 expect(JSON.stringify(result)).not.includes('id:"2,3"')
                 
             })
-            it("does not contain duplicates")
+            
             
         })      
     })
