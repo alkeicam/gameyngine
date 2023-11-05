@@ -747,18 +747,17 @@ describe('GameYngine', () => {
             it("results proper tiles #1",()=>{
                 const result = mappy.tilesWithinRange(calculator, [TileMocks.tile_5_0, TileMocks.tile_0_4], 1);
                 expect(result.length).eq(6);
-                // expect(JSON.stringify(result)).includes('"id":"3,1"')
-                // expect(JSON.stringify(result)).includes('"id":"4,2"')
-                // expect(JSON.stringify(result)).includes('"id":"4,3"')
-                // expect(JSON.stringify(result)).includes('"id":"3,3"')
-                // expect(JSON.stringify(result)).includes('"id":"2,4"')
-                // expect(JSON.stringify(result)).includes('"id":"1,3"')
-                // expect(JSON.stringify(result)).includes('"id":"1,2"')
-                // expect(JSON.stringify(result)).includes('"id":"2,2"')
+                expect(JSON.stringify(result)).includes('"id":"4,0"')
+                expect(JSON.stringify(result)).includes('"id":"4,1"')
+                expect(JSON.stringify(result)).includes('"id":"5,1"')
+                expect(JSON.stringify(result)).includes('"id":"0,3"')
+                expect(JSON.stringify(result)).includes('"id":"1,3"')
+                expect(JSON.stringify(result)).includes('"id":"1,4"')
+                
             })
             it("does not contains source/from tiles",()=>{
                 const result = mappy.tilesWithinRange(calculator, [TileMocks.tile_3_2, TileMocks.tile_2_3], 1);
-                
+                expect(result.length).eq(8);
                 expect(JSON.stringify(result)).not.includes('id:"3,2"')
                 expect(JSON.stringify(result)).not.includes('id:"2,3"')
                 
