@@ -40,129 +40,129 @@ describe('GameYngine', () => {
                 mappy = new MapSquare(height, width);
             });
             it("check",()=>{
-                expect(mappy._direction2(0,-1)).eq("N")
-                expect(mappy._direction2(0,1)).eq("S")
-                expect(mappy._direction2(-1,-1)).eq("NW")
-                expect(mappy._direction2(1,-1)).eq("NE")
-                expect(mappy._direction2(-1,0)).eq("W")
-                expect(mappy._direction2(1,0)).eq("E")
-                expect(mappy._direction2(-1,1)).eq("SW")
-                expect(mappy._direction2(1,1)).eq("SE")
+                expect(mappy._direction(0,-1)).eq("N")
+                expect(mappy._direction(0,1)).eq("S")
+                expect(mappy._direction(-1,-1)).eq("NW")
+                expect(mappy._direction(1,-1)).eq("NE")
+                expect(mappy._direction(-1,0)).eq("W")
+                expect(mappy._direction(1,0)).eq("E")
+                expect(mappy._direction(-1,1)).eq("SW")
+                expect(mappy._direction(1,1)).eq("SE")
 
-                expect(()=>{mappy._direction2(-2,0)}).to.throw("dx,dy must be one of -1, 0, 1")
-                expect(()=>{mappy._direction2(2,0)}).to.throw("dx,dy must be one of -1, 0, 1")
-                expect(()=>{mappy._direction2(0,-2)}).to.throw("dx,dy must be one of -1, 0, 1")
-                expect(()=>{mappy._direction2(0,2)}).to.throw("dx,dy must be one of -1, 0, 1")
-                expect(()=>{mappy._direction2(2,2)}).to.throw("dx,dy must be one of -1, 0, 1")
-                expect(()=>{mappy._direction2(-2,-2)}).to.throw("dx,dy must be one of -1, 0, 1")
+                expect(()=>{mappy._direction(-2,0)}).to.throw("dx,dy must be one of -1, 0, 1")
+                expect(()=>{mappy._direction(2,0)}).to.throw("dx,dy must be one of -1, 0, 1")
+                expect(()=>{mappy._direction(0,-2)}).to.throw("dx,dy must be one of -1, 0, 1")
+                expect(()=>{mappy._direction(0,2)}).to.throw("dx,dy must be one of -1, 0, 1")
+                expect(()=>{mappy._direction(2,2)}).to.throw("dx,dy must be one of -1, 0, 1")
+                expect(()=>{mappy._direction(-2,-2)}).to.throw("dx,dy must be one of -1, 0, 1")
 
-                expect(()=>{mappy._direction2(0,0)}).to.throw("can't calculate direction")
+                expect(()=>{mappy._direction(0,0)}).to.throw("can't calculate direction")
             })
         })
-        describe('_direction', () => {   
-            let mappy:MapSquare;
-            const width:number =  10;
-            const height:number =  12;
+        // describe('_direction', () => {   
+        //     let mappy:MapSquare;
+        //     const width:number =  10;
+        //     const height:number =  12;
 
-            // let INPUT = 'hello world';
-            // let INPUT_MULTI = `
+        //     // let INPUT = 'hello world';
+        //     // let INPUT_MULTI = `
             
-            // some crazy
+        //     // some crazy
 
-            // multiline imput
+        //     // multiline imput
             
-            // `
-            // let INPUT_SPECIAL = '\n\n\n\n\n\n\n\t\t\t';
-            // let SYMBOL = '*';
-            // let HOW_MANY = 7;
-            // let EXTERNAL_KEY = 'x909as9ds';         
-            beforeEach(() => {  
-                mappy = new MapSquare(width, height);
-            });
-            afterEach(() => {                  
-            });
+        //     // `
+        //     // let INPUT_SPECIAL = '\n\n\n\n\n\n\n\t\t\t';
+        //     // let SYMBOL = '*';
+        //     // let HOW_MANY = 7;
+        //     // let EXTERNAL_KEY = 'x909as9ds';         
+        //     beforeEach(() => {  
+        //         mappy = new MapSquare(width, height);
+        //     });
+        //     afterEach(() => {                  
+        //     });
 
-            it('S', () => {    
-                const direction:string = mappy._direction(1,0); 
-                return expect(direction).eq("S")
+        //     it('S', () => {    
+        //         const direction:string = mappy._direction(1,0); 
+        //         return expect(direction).eq("S")
                 
-            })
-            it("SW", () => {    
-                const direction:string = mappy._direction(1,-1); 
-                return expect(direction).eq("SW")
+        //     })
+        //     it("SW", () => {    
+        //         const direction:string = mappy._direction(1,-1); 
+        //         return expect(direction).eq("SW")
                 
-            })
-            it("SE", () => {    
-                const direction:string = mappy._direction(1,1); 
-                return expect(direction).eq("SE")
+        //     })
+        //     it("SE", () => {    
+        //         const direction:string = mappy._direction(1,1); 
+        //         return expect(direction).eq("SE")
                 
-            })
-            it('N', () => {    
-                const direction:string = mappy._direction(-1,0); 
-                return expect(direction).eq("N")
+        //     })
+        //     it('N', () => {    
+        //         const direction:string = mappy._direction(-1,0); 
+        //         return expect(direction).eq("N")
                 
-            })
-            it("NW", () => {    
-                const direction:string = mappy._direction(-1,-1); 
-                return expect(direction).eq("NW")
+        //     })
+        //     it("NW", () => {    
+        //         const direction:string = mappy._direction(-1,-1); 
+        //         return expect(direction).eq("NW")
                 
-            })
-            it("NE", () => {    
-                const direction:string = mappy._direction(-1,1); 
-                return expect(direction).eq("NE")
+        //     })
+        //     it("NE", () => {    
+        //         const direction:string = mappy._direction(-1,1); 
+        //         return expect(direction).eq("NE")
                 
-            })
-            it('W', () => {    
-                const direction:string = mappy._direction(0,-1); 
-                return expect(direction).eq("W");                
-            })
-            it("E", () => {    
-                const direction:string = mappy._direction(0,1); 
-                return expect(direction).eq("E");                
-            })
-            it('Illegal args #1', () => {    
-                return expect(()=>{mappy._direction(-3,9)}).to.throw('Invalid arguments');                                                      
-            })
-            it('Illegal args #2' , () => {    
-                return expect(()=>{mappy._direction(0,0)}).to.throw('Invalid arguments');                                      
-            })
-            // return expect(()=>{anonymise(INPUT, SYMBOL, INPUT.length+10)}).to.throw('Cant anonymise more chars than the input length');                      
-            // it('invalid symbol', () => {     
-            //     return expect(()=>{anonymise(INPUT, '', INPUT.length+10)}).to.throw('Symbol must be of length 1');                      
-            // })
-            // it('undefined symbol', () => {     
-            //     return expect(()=>{anonymise(INPUT, undefined, INPUT.length+10)}).to.throw('Symbol must be of length 1');                      
-            // })
-            // it('by default anonymise half the chars', () => {    
-            //     let record = anonymise(INPUT, SYMBOL);
-            //     let rexp = new RegExp('\\'+SYMBOL,"gim")            
-            //     return expect((record.v.match(rexp) || []).length).eq(Math.ceil(INPUT.length/2))
-            // })
-            // it('number of chars for anonymisation is provided', () => {    
-            //     let record = anonymise(INPUT, SYMBOL, HOW_MANY);
-            //     let rexp = new RegExp('\\'+SYMBOL,"gim")            
-            //     return expect((record.v.match(rexp) || []).length).eq(HOW_MANY)
-            // })
-            // it('record key is generated when external key is not provided', () => {    
-            //     let record = anonymise(INPUT, SYMBOL, HOW_MANY);            
-            //     return expect(record.k).is.not.undefined;
-            // })
-            // it('external key is used when provided', () => {    
-            //     let record = anonymise(INPUT, SYMBOL, HOW_MANY, EXTERNAL_KEY);                        
-            //     return expect(record.k).eq(EXTERNAL_KEY);
-            // })
-            // it('multiline input', () => {    
-            //     let record = anonymise(INPUT_MULTI, SYMBOL, HOW_MANY);
-            //     let rexp = new RegExp('\\'+SYMBOL,"gim") 
-            //     return expect((record.v.match(rexp) || []).length).eq(HOW_MANY)
-            // })
-            // it('special chars input', () => {    
-            //     let record = anonymise(INPUT_SPECIAL, SYMBOL, HOW_MANY);
-            //     let rexp = new RegExp('\\'+SYMBOL,"gim") 
-            //     return expect((record.v.match(rexp) || []).length).eq(HOW_MANY)
-            // })
+        //     })
+        //     it('W', () => {    
+        //         const direction:string = mappy._direction(0,-1); 
+        //         return expect(direction).eq("W");                
+        //     })
+        //     it("E", () => {    
+        //         const direction:string = mappy._direction(0,1); 
+        //         return expect(direction).eq("E");                
+        //     })
+        //     it('Illegal args #1', () => {    
+        //         return expect(()=>{mappy._direction(-3,9)}).to.throw('Invalid arguments');                                                      
+        //     })
+        //     it('Illegal args #2' , () => {    
+        //         return expect(()=>{mappy._direction(0,0)}).to.throw('Invalid arguments');                                      
+        //     })
+        //     // return expect(()=>{anonymise(INPUT, SYMBOL, INPUT.length+10)}).to.throw('Cant anonymise more chars than the input length');                      
+        //     // it('invalid symbol', () => {     
+        //     //     return expect(()=>{anonymise(INPUT, '', INPUT.length+10)}).to.throw('Symbol must be of length 1');                      
+        //     // })
+        //     // it('undefined symbol', () => {     
+        //     //     return expect(()=>{anonymise(INPUT, undefined, INPUT.length+10)}).to.throw('Symbol must be of length 1');                      
+        //     // })
+        //     // it('by default anonymise half the chars', () => {    
+        //     //     let record = anonymise(INPUT, SYMBOL);
+        //     //     let rexp = new RegExp('\\'+SYMBOL,"gim")            
+        //     //     return expect((record.v.match(rexp) || []).length).eq(Math.ceil(INPUT.length/2))
+        //     // })
+        //     // it('number of chars for anonymisation is provided', () => {    
+        //     //     let record = anonymise(INPUT, SYMBOL, HOW_MANY);
+        //     //     let rexp = new RegExp('\\'+SYMBOL,"gim")            
+        //     //     return expect((record.v.match(rexp) || []).length).eq(HOW_MANY)
+        //     // })
+        //     // it('record key is generated when external key is not provided', () => {    
+        //     //     let record = anonymise(INPUT, SYMBOL, HOW_MANY);            
+        //     //     return expect(record.k).is.not.undefined;
+        //     // })
+        //     // it('external key is used when provided', () => {    
+        //     //     let record = anonymise(INPUT, SYMBOL, HOW_MANY, EXTERNAL_KEY);                        
+        //     //     return expect(record.k).eq(EXTERNAL_KEY);
+        //     // })
+        //     // it('multiline input', () => {    
+        //     //     let record = anonymise(INPUT_MULTI, SYMBOL, HOW_MANY);
+        //     //     let rexp = new RegExp('\\'+SYMBOL,"gim") 
+        //     //     return expect((record.v.match(rexp) || []).length).eq(HOW_MANY)
+        //     // })
+        //     // it('special chars input', () => {    
+        //     //     let record = anonymise(INPUT_SPECIAL, SYMBOL, HOW_MANY);
+        //     //     let rexp = new RegExp('\\'+SYMBOL,"gim") 
+        //     //     return expect((record.v.match(rexp) || []).length).eq(HOW_MANY)
+        //     // })
             
-        })
+        // })
         
         describe('fromTiles', () => {                           
             beforeEach(() => {  

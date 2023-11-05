@@ -311,7 +311,7 @@ export class MapSquare extends MapBase {
             const dy = tile.y-originTile.y;    
             
             try{
-                const dir = this._direction2(dx,dy)
+                const dir = this._direction(dx,dy)
                 neighbours.push({
                     origin: origin,
                     target: item,
@@ -319,20 +319,7 @@ export class MapSquare extends MapBase {
                 })
             }catch(error){
                 notNeighbours.push(item);
-            }
-            
-            // // == exclude origin, <= include origin
-            // if(Math.abs(dx)<=1&&Math.abs(dy)<=1){                
-            //     // exclude origin
-            //     if(dx!=0||dy!=0){                    
-            //         neighbours.push({
-            //             origin: origin,
-            //             target: item,
-            //             direction: this._direction2(dx, dy)
-            //         })
-            //     }
-                
-            // }
+            }            
         })
         
         return neighbours;
@@ -343,7 +330,7 @@ export class MapSquare extends MapBase {
      * @param dx row delta, calculated as target.coords-origin.coords, must be one of -1, 0, 1
      * @param dy column delta, calculated as target.coords-origin.coords, must be one of -1, 0, 1
      */
-    _direction2(dx: number, dy:number, ):"N"|"S"|"E"|"W"|"NE"|"NW"|"SE"|"SW"{
+    _direction(dx: number, dy:number, ):"N"|"S"|"E"|"W"|"NE"|"NW"|"SE"|"SW"{
         if(Math.abs(dx)>1||Math.abs(dy)>1)
             throw new Error(`Invalid argument ${dx},${dy} - dx,dy must be one of -1, 0, 1`);
 
@@ -369,41 +356,41 @@ export class MapSquare extends MapBase {
 
         return result;
     }
-    _direction(dy:number, dx: number):string{
-        if(dy==dx && dy==0)
-            throw new Error('Invalid arguments');
+    // _direction(dy:number, dx: number):string{
+    //     if(dy==dx && dy==0)
+    //         throw new Error('Invalid arguments');
 
-        let result = "";
-        if(dy==1){
-            result+="S"
-            switch(Math.sign(dx)){
-                case 1: result+="E"
-                    break;
-                case -1: result+="W"
-                    break;
-            }
-        }
-        if(dy==-1){
-            result+="N"
-            switch(Math.sign(dx)){
-                case 1: result+="E"
-                    break;
-                case -1: result+="W"
-                    break;
-            }
-        }
-        if(dy==0){
-            switch(Math.sign(dx)){
-                case 1: result+="E"
-                    break;
-                case -1: result+="W"
-                    break;
-            }
-        }
-        if(!result)
-            throw new Error('Invalid arguments');
-        return result;
-    }
+    //     let result = "";
+    //     if(dy==1){
+    //         result+="S"
+    //         switch(Math.sign(dx)){
+    //             case 1: result+="E"
+    //                 break;
+    //             case -1: result+="W"
+    //                 break;
+    //         }
+    //     }
+    //     if(dy==-1){
+    //         result+="N"
+    //         switch(Math.sign(dx)){
+    //             case 1: result+="E"
+    //                 break;
+    //             case -1: result+="W"
+    //                 break;
+    //         }
+    //     }
+    //     if(dy==0){
+    //         switch(Math.sign(dx)){
+    //             case 1: result+="E"
+    //                 break;
+    //             case -1: result+="W"
+    //                 break;
+    //         }
+    //     }
+    //     if(!result)
+    //         throw new Error('Invalid arguments');
+    //     return result;
+    // }
 }
 
 /**
