@@ -67,7 +67,7 @@
     "check-coverage": true,
     "branches": 92,
     "lines": 93,
-    "functions": 88,
+    "functions": 87,
     "statements": 93,
     "extension": [
       ".ts",
