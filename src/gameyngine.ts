@@ -8,7 +8,7 @@ import { GameygineEvents } from "./util/eventDictionary.notest";
 
 
 
-export { TileBase, TileBaseDefault, TileBaseDirected, TileBaseExtended, TileBaseNFT, TileBasePlace, TileTerrain, TileTerrainLand, TileTerrainWater } from "./logic/map/common.notest";
+export { TileBase, TileBaseDirected, TileBaseExtended, TileBaseNFT, TileBasePlace, TileTerrain, TileTerrainLand, TileTerrainWater } from "./logic/map/common.notest";
 export { TileTerrainLandKind, TileTerrainLandModifications, TileTerrainWaterKind, TileTerrainWaterModifications  } from "./logic/map/common.notest";
 export { MapBase, MapHexOddQ, MapSquare, Neighbour, Path, Paths, MapFile, MapSpecs} from "./logic/map/map"
 export { CostCalculatorConst, CostCalculatorTerrain, CostCalculator, TerrainCost } from "./logic/map/costs"

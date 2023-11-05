@@ -302,29 +302,73 @@ export class MapSquare extends MapBase {
      */
     neighbours(origin: TileBase): Neighbour[] {
         const neighbours:Neighbour[] = [];
+        const notNeighbours:TileBase[] = [];
         const originTile: TileBase = <TileBase>origin;        
         this.theMap.forEach((item:TileBase)=>{
             const tile:TileBase = <TileBase> item;
             //distance on each x,y <=1
             const dx = tile.x-originTile.x;
-            const dy = tile.y-originTile.y;            
-            // == exclude origin, <= include origin
-            if(Math.abs(dx)<=1&&Math.abs(dy)<=1){                
-                // exclude origin
-                if(dx!=0||dy!=0){                    
-                    neighbours.push({
-                        origin: origin,
-                        target: item,
-                        direction: this._direction(dy, dx)
-                    })
-                }
-                
+            const dy = tile.y-originTile.y;    
+            
+            try{
+                const dir = this._direction2(dx,dy)
+                neighbours.push({
+                    origin: origin,
+                    target: item,
+                    direction: dir
+                })
+            }catch(error){
+                notNeighbours.push(item);
             }
+            
+            // // == exclude origin, <= include origin
+            // if(Math.abs(dx)<=1&&Math.abs(dy)<=1){                
+            //     // exclude origin
+            //     if(dx!=0||dy!=0){                    
+            //         neighbours.push({
+            //             origin: origin,
+            //             target: item,
+            //             direction: this._direction2(dx, dy)
+            //         })
+            //     }
+                
+            // }
         })
         
         return neighbours;
     } 
 
+    /**
+     * 
+     * @param dx row delta, calculated as target.coords-origin.coords, must be one of -1, 0, 1
+     * @param dy column delta, calculated as target.coords-origin.coords, must be one of -1, 0, 1
+     */
+    _direction2(dx: number, dy:number, ):"N"|"S"|"E"|"W"|"NE"|"NW"|"SE"|"SW"{
+        if(Math.abs(dx)>1||Math.abs(dy)>1)
+            throw new Error(`Invalid argument ${dx},${dy} - dx,dy must be one of -1, 0, 1`);
+
+        let result:"N"|"S"|"E"|"W"|"NE"|"NW"|"SE"|"SW"|undefined;
+
+        const mapping:{ [key: string]: "N"|"S"|"E"|"W"|"NE"|"NW"|"SE"|"SW"} = {
+            "-1,-1": "NW",
+            "0,-1": "N",
+            "1,-1": "NE",
+            "-1,0": "W",
+            "1,0": "E",
+            "-1,1": "SW",
+            "0,1": "S",
+            "1,1": "SE",
+        }
+
+        const id = `${Math.sign(dx)},${Math.sign(dy)}`;
+
+        result = mapping[id];
+
+        if(!result)
+            throw new Error(`Invalid argument ${dx},${dy} - can't calculate direction.`);
+
+        return result;
+    }
     _direction(dy:number, dx: number):string{
         if(dy==dx && dy==0)
             throw new Error('Invalid arguments');
@@ -389,123 +433,202 @@ export class MapHexOddQ extends MapBase {
      */
     neighbours(origin: TileBase): Neighbour[] {
         const neighbours:Neighbour[] = [];
-        const originTile: TileBase = <TileBase>origin;        
+        const originTile: TileBase = <TileBase>origin;  
+        
+        // const xEvenMapping:{ [key: string]: "N"|"S"|"NE"|"NW"|"SE"|"SW" } = {
+        //     "0,1": "S",
+        //     "0,-1": "N",
+        //     "1,-1": "NE",
+        //     "-1,-1": "NW",
+        //     "1,0": "SE",
+        //     "-1,0": "SW",
+        // }
+        // const xOddMapping:{ [key: string]: "N"|"S"|"NE"|"NW"|"SE"|"SW" } = {
+        //     "1,0": "NE",
+        //     "-1,0": "NW",
+        //     "1,1": "SE",
+        //     "-1,1": "SW"
+        // }
+
+        let notNeighbours = []
+
         this.theMap.forEach((item:TileBase)=>{
             const tile:TileBase = <TileBase> item;
             //distance on each x,y <=1
-            const dx = originTile.x-tile.x;
-            const dy = originTile.y-tile.y;                                    
+            const dx = tile.x-originTile.x;
+            const dy = tile.y-originTile.y;                                    
 
-            let neighbour;
-            switch(origin.y%2==0){
-                case true:
-                    // even
-                    const coordsDeltaEven = [{dy:0 , dx:1},{dy:-1 , dx:1}, {dy:-1 , dx:0},{dy:0 , dx:-1}, {dy:1 , dx:0}, {dy:1 , dx:1}]
-                    neighbour = coordsDeltaEven.find((item:any)=>{
-                        return item.dx == dx && item.dy == dy
-                    })                    
-                    break;
-                case false:
-                    // odd
-                    const coordsDeltaOdd = [{dy:0 , dx:1},{dy:-1 , dx:0}, {dy:-1 , dx:-1},{dy:0 , dx:-1}, {dy:1 , dx:-1}, {dy:1 , dx:0}]
-                    neighbour = coordsDeltaOdd.find((item:any)=>{
-                        return item.dx == dx && item.dy == dy
-                    })  
-                    break;
-            }
-
-            if(neighbour){
+            try{
+                const dir = this._direction(origin, dx,dy)
                 neighbours.push({
                     origin: origin,
                     target: item,
-                    direction: this._direction(origin, dy, dx)
+                    direction: dir
                 })
-            }                        
+            }
+            catch(error){
+                // when error then this is not an neighbour
+                notNeighbours.push(item.id);
+            }
+
+            // let neighbour;
+            // switch(origin.y%2==0){
+            //     case true:
+            //         // even
+            //         const coordsDeltaEven = [{dy:0 , dx:1},{dy:-1 , dx:1}, {dy:-1 , dx:0},{dy:0 , dx:-1}, {dy:1 , dx:0}, {dy:1 , dx:1}]
+            //         neighbour = coordsDeltaEven.find((item:any)=>{
+            //             return item.dx == dx && item.dy == dy
+            //         })                    
+            //         break;
+            //     case false:
+            //         // odd
+            //         const coordsDeltaOdd = [{dy:0 , dx:1},{dy:-1 , dx:0}, {dy:-1 , dx:-1},{dy:0 , dx:-1}, {dy:1 , dx:-1}, {dy:1 , dx:0}]
+            //         neighbour = coordsDeltaOdd.find((item:any)=>{
+            //             return item.dx == dx && item.dy == dy
+            //         })  
+            //         break;
+            // }
+
+            // if(neighbour){
+            //     neighbours.push({
+            //         origin: origin,
+            //         target: item,
+            //         direction: this._direction2(origin, dx, dy)
+            //     })
+            // }                        
         })
         
         return neighbours;    		
     } 
+
     /**
-     * Odd-q hex grid direction calculation
-     * (q,r) -> (y,x) :: (cols, rows)
-     *  // ODD-Q
-		
-		// dq == 0  dr<0 S
-		// dq == 0  dr>0 N
-
-        odd-q
-
-		// dq > 0 dr>0 NW
-		// dq > 0 dr==0 SW
-
-		// dq < 0 dr>0 NE
-		// dq < 0 dr==0 SE
-
-        even-q
-
-		// dq > 0 dr<0 SW
-		// dq > 0 dr==0 NW
-
-		// dq < 0 dr<0 SE
-		// dq < 0 dr==0 NE
-     * @param dy 
-     * @param dx 
-     * @returns 
+     * Calculates string representation of a relative direction
+     * from the tile towards the "delta" in rows and cols.
+     * Delta is calculated as target.coords-tile.coords.
+     * @param tile origin tile, the center tile
+     * @param dx row delta, can be 1 or -1, calculated as targer.coords-tile.coords
+     * @param dy column delta, can br 1 or -1 
+     * @returns {"N"|"S"|"NE"|"NW"|"SE"|"SW"} 
      */
-    _direction(tile: TileBase, dy:number, dx: number):string{
+    _direction(tile: TileBase, dx: number, dy:number):"N"|"S"|"NE"|"NW"|"SE"|"SW"{
+        // we are at the origin tile, so throw an arror
         if(dy==dx && dy==0)
+            throw new Error(`Invalid arguments ${tile.id} ${dy}, ${dx} - both delta can't be 0`);
+        if(dx>1||dy>1)
+            throw new Error(`Invalid arguments ${tile.id} ${dy}, ${dx} - delta must be one of -1, 0, 1`);
+        if(dx<-1||dy<-1)
+            throw new Error(`Invalid arguments ${tile.id} ${dy}, ${dx} - delta must be one of -1, 0, 1`);
+        
+        let result:"N"|"S"|"NE"|"NW"|"SE"|"SW"|undefined;
+        
+        
+        const xEvenMapping:{ [key: string]: "N"|"S"|"NE"|"NW"|"SE"|"SW" } = {
+            "0,1": "S",
+            "0,-1": "N",
+            "1,-1": "NE",
+            "-1,-1": "NW",
+            "1,0": "SE",
+            "-1,0": "SW",
+        }
+        const xOddMapping:{ [key: string]: "N"|"S"|"NE"|"NW"|"SE"|"SW" } = {
+            "0,1": "S",
+            "0,-1": "N",
+            "1,0": "NE",
+            "-1,0": "NW",
+            "1,1": "SE",
+            "-1,1": "SW"
+        }
+
+        const id = `${Math.sign(dx)},${Math.sign(dy)}`;
+
+        result = tile.x%2==0?xEvenMapping[id]:xOddMapping[id];
+        
+        if(!result)
             throw new Error(`Invalid arguments ${tile.id} ${dy}, ${dx}`);
+
+        return result;           
+    }
+//     /**
+//      * Odd-q hex grid direction calculation
+//      * (q,r) -> (y,x) :: (cols, rows)
+//      *  // ODD-Q
+		
+// 		// dq == 0  dr<0 S
+// 		// dq == 0  dr>0 N
+
+//         odd-q
+
+// 		// dq > 0 dr>0 NW
+// 		// dq > 0 dr==0 SW
+
+// 		// dq < 0 dr>0 NE
+// 		// dq < 0 dr==0 SE
+
+//         even-q
+
+// 		// dq > 0 dr<0 SW
+// 		// dq > 0 dr==0 NW
+
+// 		// dq < 0 dr<0 SE
+// 		// dq < 0 dr==0 NE
+//      * @param dy 
+//      * @param dx 
+//      * @returns 
+//      */
+//     _direction(tile: TileBase, dy:number, dx: number):string{
+//         if(dy==dx && dy==0)
+//             throw new Error(`Invalid arguments ${tile.id} ${dy}, ${dx}`);
 
        
 
 
-        let result = "";
+//         let result = "";
 
-        if(dy==0){
-            switch(Math.sign(dx)){
-                case 1: result+="N"
-                    break;
-                case -1: result+="S"
-                    break;
-            }
-        }
+//         if(dy==0){
+//             switch(Math.sign(dx)){
+//                 case 1: result+="N"
+//                     break;
+//                 case -1: result+="S"
+//                     break;
+//             }
+//         }
         
-        // even tile
-        if(tile.y%2==0){
+//         // even tile
+//         if(tile.y%2==0){
             
-            if(Math.sign(dy)==1){            
-                if(dx>0)
-                    result+="NW"
-                if(dx==0)
-                    result+="SW"
-            }
+//             if(Math.sign(dy)==1){            
+//                 if(dx>0)
+//                     result+="NW"
+//                 if(dx==0)
+//                     result+="SW"
+//             }
     
-            if(Math.sign(dy)==-1){            
-                if(dx>0)
-                    result+="NE"
-                if(dx==0)
-                    result+="SE"
-            }
-        }else{
-            // odd tile
-            if(Math.sign(dy)==1){            
-                if(dx<0)
-                    result+="SW"
-                if(dx==0)
-                    result+="NW"
-            }
-            if(Math.sign(dy)==-1){            
-                if(dx<0)
-                    result+="SE"
-                if(dx==0)
-                    result+="NE"
-            }
-        }
+//             if(Math.sign(dy)==-1){            
+//                 if(dx>0)
+//                     result+="NE"
+//                 if(dx==0)
+//                     result+="SE"
+//             }
+//         }else{
+//             // odd tile
+//             if(Math.sign(dy)==1){            
+//                 if(dx<0)
+//                     result+="SW"
+//                 if(dx==0)
+//                     result+="NW"
+//             }
+//             if(Math.sign(dy)==-1){            
+//                 if(dx<0)
+//                     result+="SE"
+//                 if(dx==0)
+//                     result+="NE"
+//             }
+//         }
 
         
 
-        if(!result)
-            throw new Error(`Invalid arguments ${tile.id} ${dy}, ${dx}`);
-        return result;
-    }
+//         if(!result)
+//             throw new Error(`Invalid arguments ${tile.id} ${dy}, ${dx}`);
+//         return result;
+//     }
 }

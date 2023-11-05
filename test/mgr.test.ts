@@ -24,6 +24,7 @@ import {Utils} from "../src/util/utils";
 
 import { GameygineEvents } from '../src/util/eventDictionary.notest';
 import EventEmitter from 'eventemitter3';
+import { Tile } from '../src/logic/map/tile';
 
 const messageBus = new EventEmitter();
 
@@ -31,6 +32,33 @@ const messageBus = new EventEmitter();
 
 describe('GameYngine', () => {
     describe('MapSquare', () => {   
+        describe("_direction2",()=>{
+            let mappy:MapSquare;
+            const width:number =  6;
+            const height:number =  5;
+            beforeEach(() => {  
+                mappy = new MapSquare(height, width);
+            });
+            it("check",()=>{
+                expect(mappy._direction2(0,-1)).eq("N")
+                expect(mappy._direction2(0,1)).eq("S")
+                expect(mappy._direction2(-1,-1)).eq("NW")
+                expect(mappy._direction2(1,-1)).eq("NE")
+                expect(mappy._direction2(-1,0)).eq("W")
+                expect(mappy._direction2(1,0)).eq("E")
+                expect(mappy._direction2(-1,1)).eq("SW")
+                expect(mappy._direction2(1,1)).eq("SE")
+
+                expect(()=>{mappy._direction2(-2,0)}).to.throw("dx,dy must be one of -1, 0, 1")
+                expect(()=>{mappy._direction2(2,0)}).to.throw("dx,dy must be one of -1, 0, 1")
+                expect(()=>{mappy._direction2(0,-2)}).to.throw("dx,dy must be one of -1, 0, 1")
+                expect(()=>{mappy._direction2(0,2)}).to.throw("dx,dy must be one of -1, 0, 1")
+                expect(()=>{mappy._direction2(2,2)}).to.throw("dx,dy must be one of -1, 0, 1")
+                expect(()=>{mappy._direction2(-2,-2)}).to.throw("dx,dy must be one of -1, 0, 1")
+
+                expect(()=>{mappy._direction2(0,0)}).to.throw("can't calculate direction")
+            })
+        })
         describe('_direction', () => {   
             let mappy:MapSquare;
             const width:number =  10;
@@ -167,8 +195,8 @@ describe('GameYngine', () => {
         
         describe('neighbours', () => {   
             let mappy:MapSquare;
-            const width:number =  5;
-            const height:number =  6;
+            const width:number =  6;
+            const height:number =  5;
             
             beforeEach(() => {  
                 mappy = new MapSquare(height, width);
@@ -178,74 +206,31 @@ describe('GameYngine', () => {
             });
 
             it('upper left', () => {    
-                const neighbours: Neighbour[] = mappy.neighbours({id: "0,0", x: 0, y:0, t: {kind: "PLAINS"}});
-                return expect(neighbours).length(3);                
-            }) 
-            it('upper left #1', () => {    
-                const neighbours: Neighbour[] = mappy.neighbours({id: "0,0", x: 0, y:0, t: {kind: "PLAINS"}});
-                const E = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "E"
-                })
-                const S = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "S"
-                })
-                const SE = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "SE"
-                })
-                return expect(E?.direction+S?.direction+SE?.direction).eq("ESSE")
-            }) 
+                const neighbours: Neighbour[] = mappy.neighbours(new Tile(0,0,"PLAINS"));
+                expect(neighbours).length(3);
+                expect(neighbours.find(item=>item.target.id=="1,0")?.direction).eq("E");
+                expect(neighbours.find(item=>item.target.id=="1,1")?.direction).eq("SE");
+                expect(neighbours.find(item=>item.target.id=="0,1")?.direction).eq("S");
+            })
             it('upper right', () => {    
-                const neighbours: Neighbour[] = mappy.neighbours({id: "0,4", x: 4, y:0, t: {kind: "PLAINS"}});
-                return expect(neighbours).length(3);                
+                const neighbours: Neighbour[] = mappy.neighbours(new Tile(5,0,"PLAINS"));
+                expect(neighbours).length(3);
+                expect(neighbours.find(item=>item.target.id=="4,0")?.direction).eq("W");
+                expect(neighbours.find(item=>item.target.id=="4,1")?.direction).eq("SW");
+                expect(neighbours.find(item=>item.target.id=="5,1")?.direction).eq("S");
             }) 
-            it('upper right #1', () => {    
-                const neighbours: Neighbour[] = mappy.neighbours({id: "0,4", x: 4, y:0, t: {kind: "PLAINS"}});
-                const nW = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "W"
-                })
-                const nSW = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "SW"
-                })
-                const nS = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "S"
-                })                
-                return expect(nW?.direction+nSW?.direction+nS?.direction).eq("WSWS")
-            })
-            it('middle', () => {    
-                const neighbours: Neighbour[] = mappy.neighbours({id: "2,4", x: 2, y:2, t: {kind: "PLAINS"}});
-                return expect(neighbours).length(8);                
-            })
-            it('middle #1', () => {    
-                const neighbours: Neighbour[] = mappy.neighbours({id: "2,4", x: 2, y:2, t: {kind: "PLAINS"}});
-                const N = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "N"
-                })
-                const S = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "S"
-                })
-                const E = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "E"
-                })
-                const W = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "W"
-                })
-                const NE = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "NE"
-                })
-                const NW = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "NW"
-                })
-                const SW = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "SW"
-                })
-                const SE = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "SE"
-                })
-
-                return expect(N?.direction+S?.direction+E?.direction+W?.direction+NE?.direction+NW?.direction+SW?.direction+SE?.direction).eq("NSEWNENWSWSE")
-
-            })
-            
+            it("middle",()=>{
+                const neighbours: Neighbour[] = mappy.neighbours(new Tile(2,1,"PLAINS"));
+                expect(neighbours).length(8);
+                expect(neighbours.find(item=>item.target.id=="1,0")?.direction).eq("NW");
+                expect(neighbours.find(item=>item.target.id=="2,0")?.direction).eq("N");
+                expect(neighbours.find(item=>item.target.id=="3,0")?.direction).eq("NE");
+                expect(neighbours.find(item=>item.target.id=="1,1")?.direction).eq("W");
+                expect(neighbours.find(item=>item.target.id=="3,1")?.direction).eq("E");
+                expect(neighbours.find(item=>item.target.id=="1,2")?.direction).eq("SW");
+                expect(neighbours.find(item=>item.target.id=="2,2")?.direction).eq("S");
+                expect(neighbours.find(item=>item.target.id=="3,2")?.direction).eq("SE");
+            })                                                
         })
 
         describe('paths',()=>{
@@ -582,103 +567,44 @@ describe('GameYngine', () => {
 
     describe('MapHeqOddQ', () => {   
         describe('_direction', () => {   
-            describe('even', () => {
-                let mappy:MapHexOddQ;
-                const width:number =  10;
-                const height:number =  12;
-                        
-                beforeEach(() => {  
-                    mappy = new MapHexOddQ(height, width);
-                });
-                afterEach(() => {                  
-                });
-
-                it('N', () => {    
-                    const direction:string = mappy._direction({id: "2,2", t: {kind: "PLAINS"}, y:2, x: 2},0,1); 
-                    return expect(direction).eq("N")
-                    
-                })
-                it('S', () => {    
-                    const direction:string = mappy._direction({id: "2,2", t: {kind: "PLAINS"}, y:2, x: 2},0,-1); 
-                    return expect(direction).eq("S")
-                    
-                })
-                it('NE', () => {    
-                    const direction:string = mappy._direction({id: "2,2", t: {kind: "PLAINS"}, y:2, x: 2},-1,1); 
-                    return expect(direction).eq("NE")
-                    
-                })
-                it('SE', () => {    
-                    const direction:string = mappy._direction({id: "2,2", t: {kind: "PLAINS"}, y:2, x: 2},-1,0); 
-                    return expect(direction).eq("SE")
-                    
-                })
-                it('SW', () => {    
-                    const direction:string = mappy._direction({id: "2,2", t: {kind: "PLAINS"}, y:2, x: 2},1,0); 
-                    return expect(direction).eq("SW")
-                    
-                })
-                it('NW', () => {    
-                    const direction:string = mappy._direction({id: "2,2", t: {kind: "PLAINS"}, y:2, x: 2},1,1); 
-                    return expect(direction).eq("NW")
-                    
-                })
-                it('Illegal args #1', () => {    
-                    return expect(()=>{mappy._direction({id: "2,2", t: {kind: "PLAINS"}, y:2, x: 2},3,-9)}).to.throw('Invalid arguments');                                                      
-                })
-                it('Illegal args #2' , () => {    
-                    return expect(()=>{mappy._direction({id: "2,2", t: {kind: "PLAINS"}, y:2, x: 2},0,0)}).to.throw('Invalid arguments');                                      
-                })
-            })
-            describe('odd', () => {
-                let mappy:MapHexOddQ;
-                const width:number =  10;
-                const height:number =  12;
-                        
-                beforeEach(() => {  
-                    mappy = new MapHexOddQ(height, width);
-                });
-                afterEach(() => {                  
-                });
-
-                it('N', () => {    
-                    const direction:string = mappy._direction({id: "3,2", t: {kind: "PLAINS"}, y:3, x: 2},0,1); 
-                    return expect(direction).eq("N")
-                    
-                })
-                it('S', () => {    
-                    const direction:string = mappy._direction({id: "3,2", t: {kind: "PLAINS"}, y:3, x: 2},0,-1); 
-                    return expect(direction).eq("S")
-                    
-                })
-                it('NE', () => {    
-                    const direction:string = mappy._direction({id: "3,2", t: {kind: "PLAINS"}, y:3, x: 2},-1,0); 
-                    return expect(direction).eq("NE")
-                    
-                })
-                it('SE', () => {    
-                    const direction:string = mappy._direction({id: "3,2", t: {kind: "PLAINS"}, y:3, x: 2},-1,-1); 
-                    return expect(direction).eq("SE")
-                    
-                })
-                it('SW', () => {    
-                    const direction:string = mappy._direction({id: "3,2", t: {kind: "PLAINS"}, y:3, x: 2},1,-1); 
-                    return expect(direction).eq("SW")
-                    
-                })
-                it('NW', () => {    
-                    const direction:string = mappy._direction({id: "3,2", t: {kind: "PLAINS"}, y:3, x: 2},1,0); 
-                    return expect(direction).eq("NW")
-                    
-                })
-                it('Illegal args #1', () => {    
-                    return expect(()=>{mappy._direction({id: "3,2", t: {kind: "PLAINS"}, y:3, x: 2},1,1)}).to.throw('Invalid arguments');                                                      
-                })
-                it('Illegal args #2' , () => {    
-                    return expect(()=>{mappy._direction({id: "3,2", t: {kind: "PLAINS"}, y:3, x: 2},0,0)}).to.throw('Invalid arguments');                                      
-                })
+            let mappy:MapHexOddQ;
+            beforeEach(()=>{
+                mappy = new MapHexOddQ(6,8)                    
             })
             
+            it("odd x",()=>{
+                expect(mappy._direction(new Tile(1,1,"UNDEFINED"),0,-1)).eq("N");
+                expect(mappy._direction(new Tile(1,1,"UNDEFINED"),0,1)).eq("S");
+                expect(mappy._direction(new Tile(1,1,"UNDEFINED"),1,0)).eq("NE");
+                expect(mappy._direction(new Tile(1,1,"UNDEFINED"),-1,0)).eq("NW");
+                expect(mappy._direction(new Tile(1,1,"UNDEFINED"),1,1)).eq("SE");
+                expect(mappy._direction(new Tile(1,1,"UNDEFINED"),-1,1)).eq("SW");
+
+                expect(()=>{expect(mappy._direction(new Tile(1,1,"UNDEFINED"),-2,0)).eq("NE");}).to.throw("delta must be one of -1, 0, 1")
+                expect(()=>{expect(mappy._direction(new Tile(1,1,"UNDEFINED"),2,0)).eq("NE");}).to.throw("delta must be one of -1, 0, 1")
+                expect(()=>{expect(mappy._direction(new Tile(1,1,"UNDEFINED"),1,-2)).eq("NE");}).to.throw("delta must be one of -1, 0, 1")
+                expect(()=>{expect(mappy._direction(new Tile(1,1,"UNDEFINED"),1,2)).eq("NE");}).to.throw("delta must be one of -1, 0, 1")
+                expect(()=>{expect(mappy._direction(new Tile(1,1,"UNDEFINED"),2,2)).eq("NE");}).to.throw("delta must be one of -1, 0, 1")
+                expect(()=>{expect(mappy._direction(new Tile(1,1,"UNDEFINED"),-2,-2)).eq("NE");}).to.throw("delta must be one of -1, 0, 1")
+
+            })
+            it("even x",()=>{
+                expect(mappy._direction(new Tile(2,1,"UNDEFINED"),0,-1)).eq("N");
+                expect(mappy._direction(new Tile(2,1,"UNDEFINED"),0,1)).eq("S");
+                expect(mappy._direction(new Tile(2,1,"UNDEFINED"),1,-1)).eq("NE");
+                expect(mappy._direction(new Tile(2,1,"UNDEFINED"),-1,-1)).eq("NW");
+                expect(mappy._direction(new Tile(2,1,"UNDEFINED"),1,0)).eq("SE");
+                expect(mappy._direction(new Tile(2,1,"UNDEFINED"),-1,0)).eq("SW");
+
+                expect(()=>{mappy._direction(new Tile(0,0,"UNDEFINED"),1,1)}).to.throw("Invalid arguments")
+
+                expect(()=>{mappy._direction(new Tile(2,1,"UNDEFINED"),-2,0)}).to.throw("delta must be one of -1, 0, 1")
+                expect(()=>{mappy._direction(new Tile(2,1,"UNDEFINED"),-1,-2)}).to.throw("delta must be one of -1, 0, 1")
+                expect(()=>{mappy._direction(new Tile(2,1,"UNDEFINED"),2,0)}).to.throw("delta must be one of -1, 0, 1")
+                expect(()=>{mappy._direction(new Tile(2,1,"UNDEFINED"),-1,2)}).to.throw("delta must be one of -1, 0, 1")
+                expect(()=>{mappy._direction(new Tile(2,1,"UNDEFINED"),2,2)}).to.throw("delta must be one of -1, 0, 1")
+                expect(()=>{mappy._direction(new Tile(2,1,"UNDEFINED"),-2,-2)}).to.throw("delta must be one of -1, 0, 1")
+            })                            
         })
         
         describe('fromJson', () => {                           
@@ -713,8 +639,8 @@ describe('GameYngine', () => {
         
         describe('neighbours', () => {   
             let mappy:MapHexOddQ;
-            const width:number =  5;
-            const height:number =  6;
+            const width:number =  6;
+            const height:number =  5;
             
             beforeEach(() => {  
                 mappy = new MapHexOddQ(height, width);
@@ -724,78 +650,77 @@ describe('GameYngine', () => {
             });
 
             it('upper left', () => {    
-                const neighbours: Neighbour[] = mappy.neighbours({id: "0,0", x: 0, y:0, t: {kind: "PLAINS"}});                
-                return expect(neighbours).length(2);                
-            }) 
-            it('upper left #1', () => {    
-                const neighbours: Neighbour[] = mappy.neighbours({id: "0,0", x: 0, y:0, t: {kind: "PLAINS"}});
-                const S = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "S"
-                })
-                const SE = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "SE"
-                })
-                return expect(S?.direction+SE?.direction).eq("SSE")
-            }) 
+                const neighbours: Neighbour[] = mappy.neighbours(new Tile(0,0,"PLAINS"));                
+                expect(neighbours).length(2); 
+                expect(JSON.stringify(neighbours)).includes('"id":"0,1"')
+                expect(JSON.stringify(neighbours)).includes('"id":"1,0"')
+                expect(neighbours[0].direction).eq("SE")
+                expect(neighbours[1].direction).eq("S")
+            })  
+            it('lower left', () => {    
+                const neighbours: Neighbour[] = mappy.neighbours(new Tile(0,4,"PLAINS"));                
+                expect(neighbours).length(3); 
+                expect(JSON.stringify(neighbours)).includes('"id":"0,3"')
+                expect(JSON.stringify(neighbours)).includes('"id":"1,3"')
+                expect(JSON.stringify(neighbours)).includes('"id":"1,4"')
+                expect(neighbours.find(item=>item.target.id=="0,3")?.direction).eq("N")
+                expect(neighbours.find(item=>item.target.id=="1,3")?.direction).eq("NE")
+                expect(neighbours.find(item=>item.target.id=="1,4")?.direction).eq("SE")
+            })           
             it('upper right', () => {    
-                const neighbours: Neighbour[] = mappy.neighbours({id: "5,0", x: 0, y:5, t: {kind: "PLAINS"}});                
-                return expect(neighbours).length(3);                
+                const neighbours: Neighbour[] = mappy.neighbours(new Tile(5,0,"PLAINS"));                
+                expect(neighbours).length(3);     
+                expect(JSON.stringify(neighbours)).includes('"id":"4,0"')           
+                expect(JSON.stringify(neighbours)).includes('"id":"4,1"')           
+                expect(JSON.stringify(neighbours)).includes('"id":"5,1"')  
+                expect(neighbours[0].direction).eq("NW")                         
+                expect(neighbours[1].direction).eq("SW")
+                expect(neighbours[2].direction).eq("S")
             }) 
-            it('upper right #1', () => {    
-                const neighbours: Neighbour[] = mappy.neighbours({id: "5,0", x: 0, y:5, t: {kind: "PLAINS"}});
-                const nNW = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "NW"
-                })
-                const nSW = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "SW"
-                })
-                const nS = neighbours.find((item:Neighbour)=>{
-                    return item.direction == "S"
-                })                
-                return expect(nNW?.direction+nSW?.direction+nS?.direction).eq("NWSWS")
+            it('lower right', () => {    
+                const neighbours: Neighbour[] = mappy.neighbours(new Tile(5,4,"PLAINS"));                
+                expect(neighbours).length(2); 
+                expect(JSON.stringify(neighbours)).includes('"id":"4,4"')
+                expect(JSON.stringify(neighbours)).includes('"id":"5,3"')
+                
+                expect(neighbours.find(item=>item.target.id=="4,4")?.direction).eq("NW")
+                expect(neighbours.find(item=>item.target.id=="5,3")?.direction).eq("N")
+                
             })
+            
             it('middle even', () => {    
-                const neighbours: Neighbour[] = mappy.neighbours({id: "2,2", x: 2, y:2, t: {kind: "PLAINS"}});
-                console.log(neighbours);
-                return expect(neighbours).length(6);                
+                const neighbours: Neighbour[] = mappy.neighbours(new Tile(2,1,"PLAINS"));                
+                expect(neighbours).length(6); 
+                expect(JSON.stringify(neighbours)).includes('"id":"1,0"')
+                expect(JSON.stringify(neighbours)).includes('"id":"2,0"')
+                expect(JSON.stringify(neighbours)).includes('"id":"3,0"')
+                expect(JSON.stringify(neighbours)).includes('"id":"1,1"')
+                expect(JSON.stringify(neighbours)).includes('"id":"2,2"')
+                expect(JSON.stringify(neighbours)).includes('"id":"3,1"')
+                expect(neighbours.find(item=>item.target.id=="1,0")?.direction).eq("NW")
+                expect(neighbours.find(item=>item.target.id=="2,0")?.direction).eq("N")
+                expect(neighbours.find(item=>item.target.id=="3,0")?.direction).eq("NE")
+                expect(neighbours.find(item=>item.target.id=="1,1")?.direction).eq("SW")
+                expect(neighbours.find(item=>item.target.id=="2,2")?.direction).eq("S")
+                expect(neighbours.find(item=>item.target.id=="3,1")?.direction).eq("SE")
             })
 
             it('middle odd', () => {    
-                const neighbours: Neighbour[] = mappy.neighbours({id: "3,2", x: 2, y:3, t: {kind: "PLAINS"}});
-                console.log(neighbours);
-                return expect(neighbours).length(6);                
-            })
-            // it('middle #1', () => {    
-            //     const neighbours: Neighbour[] = mappy.neighbours({id: "2,4", x: 2, y:2, t: {kind: "PLAINS"}});
-            //     const N = neighbours.find((item:Neighbour)=>{
-            //         return item.direction == "N"
-            //     })
-            //     const S = neighbours.find((item:Neighbour)=>{
-            //         return item.direction == "S"
-            //     })
-            //     const E = neighbours.find((item:Neighbour)=>{
-            //         return item.direction == "E"
-            //     })
-            //     const W = neighbours.find((item:Neighbour)=>{
-            //         return item.direction == "W"
-            //     })
-            //     const NE = neighbours.find((item:Neighbour)=>{
-            //         return item.direction == "NE"
-            //     })
-            //     const NW = neighbours.find((item:Neighbour)=>{
-            //         return item.direction == "NW"
-            //     })
-            //     const SW = neighbours.find((item:Neighbour)=>{
-            //         return item.direction == "SW"
-            //     })
-            //     const SE = neighbours.find((item:Neighbour)=>{
-            //         return item.direction == "SE"
-            //     })
-
-            //     return expect(N?.direction+S?.direction+E?.direction+W?.direction+NE?.direction+NW?.direction+SW?.direction+SE?.direction).eq("NSEWNENWSWSE")
-
-            // })
-            
+                const neighbours: Neighbour[] = mappy.neighbours(new Tile(3,1,"PLAINS"));                
+                expect(neighbours).length(6); 
+                expect(JSON.stringify(neighbours)).includes('"id":"2,1"')
+                expect(JSON.stringify(neighbours)).includes('"id":"3,0"')
+                expect(JSON.stringify(neighbours)).includes('"id":"4,1"')
+                expect(JSON.stringify(neighbours)).includes('"id":"2,2"')
+                expect(JSON.stringify(neighbours)).includes('"id":"3,2"')
+                expect(JSON.stringify(neighbours)).includes('"id":"4,2"')
+                expect(neighbours.find(item=>item.target.id=="2,1")?.direction).eq("NW")
+                expect(neighbours.find(item=>item.target.id=="3,0")?.direction).eq("N")
+                expect(neighbours.find(item=>item.target.id=="4,1")?.direction).eq("NE")
+                expect(neighbours.find(item=>item.target.id=="2,2")?.direction).eq("SW")
+                expect(neighbours.find(item=>item.target.id=="3,2")?.direction).eq("S")
+                expect(neighbours.find(item=>item.target.id=="4,2")?.direction).eq("SE")
+            })            
         })  
         describe("tiles within range",()=>{
             let mappy:MapHexOddQ;

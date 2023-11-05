@@ -79,5 +79,3 @@ export interface TileBaseNFT extends TileBase {
         o: string, // id of the current owner address on blockchain
     }    
 }
-
-export interface TileBaseDefault extends TileBasePlace, TileBaseExtended, TileBaseNFT, TileBaseDirected{}
