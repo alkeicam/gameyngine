@@ -63,6 +63,11 @@ export abstract class MapBase {
         this.height = height
     }
 
+    /**
+     * Creates a deep copy (?) of this MapBase
+     */
+    abstract deepCopy():MapBase;
+
     tile(id:string):TileBase{
         const tile =  this.theMap.get(id);
         if(!tile)
@@ -295,6 +300,14 @@ export class MapSquare extends MapBase {
         super(height, width);
     }
 
+    deepCopy():MapSquare{
+        const newMap = new MapSquare(this.height, this.width);
+        this.theMap.forEach((value)=>{
+            newMap.put(JSON.parse(JSON.stringify(value)));
+        })
+        return newMap;
+    }
+    
     /**
      * 
      * @param origin 
@@ -396,7 +409,7 @@ export class MapSquare extends MapBase {
 /**
  * In hex map coordinate system x stands for q-columns and y stand for r-rows
  * 
- * (q,r) -> (y,x) :: (cols, rows)
+ * (q,r) -> (x,y) :: (cols, rows)
  */
 export class MapHexOddQ extends MapBase {
     CONST_DIRECTION_N = 'N';
@@ -411,6 +424,15 @@ export class MapHexOddQ extends MapBase {
     
     constructor(height: number, width: number){
         super(height, width);
+    }
+
+    deepCopy():MapHexOddQ{
+        const newMap = new MapHexOddQ(this.height, this.width);
+
+        this.theMap.forEach((value)=>{
+            newMap.put(JSON.parse(JSON.stringify(value)));
+        })
+        return newMap;
     }
 
     /**

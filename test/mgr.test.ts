@@ -561,6 +561,28 @@ describe('GameYngine', () => {
                 })}).to.throw("violates map size");                    
             })
         })
+        describe("copying",()=>{
+            let mappy:MapSquare;
+            const width:number =  6;
+            const height:number =  5;
+            beforeEach(() => {  
+                mappy = new MapSquare(height, width);
+            });
+
+            it("makes a deep copy",()=>{
+                mappy.fromTiles(JSON.parse(JSON.stringify(MapsMocks.map_6x5)));
+                
+                const newMap = mappy.deepCopy();
+                // now modify original map
+                const tile = mappy.tile("0,0");
+                tile.t.kind = "SOME_NEW_KIND";
+                // mappy.put(tile);
+                // and check copy
+                expect(newMap.theMap.size).eq(mappy.theMap.size);
+                expect(newMap.tile("0,0").t.kind).not.equal("SOME_NEW_KIND");
+                
+            })
+        })
         
         
     })
@@ -764,7 +786,28 @@ describe('GameYngine', () => {
             })
             
             
-        })      
+        })   
+        describe("copying",()=>{
+            let mappy:MapHexOddQ;
+            const width:number =  6;
+            const height:number =  5;
+            beforeEach(() => {  
+                mappy = new MapHexOddQ(height, width);
+            });
+
+            it("makes a deep copy",()=>{
+                mappy.fromTiles(JSON.parse(JSON.stringify(MapsMocks.map_6x5)));                
+                const newMap = mappy.deepCopy();
+                // now modify original map
+                const tile = mappy.tile("0,0");
+                tile.t.kind = "SOME_NEW_KIND";
+                // mappy.put(tile);
+                // and check copy
+                expect(newMap.theMap.size).eq(mappy.theMap.size);
+                expect(newMap.tile("0,0").t.kind).not.equal("SOME_NEW_KIND");
+                
+            })
+        })   
     })
 
     describe('CostCalculatorConst',()=>{
