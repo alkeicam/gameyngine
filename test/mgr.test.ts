@@ -174,13 +174,14 @@ describe('GameYngine', () => {
             it('map size', () => {    
                 let mappy:MapSquare = new MapSquare(6, 5);
                 mappy.fromTiles(MapsMocks.map_6x5);
-                return expect(Array.from(mappy.theMap).length).eq(30);                
+                
+                return expect(Object.keys(mappy.theMap).length).eq(30);                
             })   
             
             it('size check', () => {    
                 let mappy:MapSquare = new MapSquare(6, 5);
                 mappy.fromTiles(MapsMocks.map_5x6);
-                return expect(Array.from(mappy.theMap).length).eq(30);                
+                return expect(Object.keys(mappy.theMap).length).eq(30);                
             }) 
 
             it('size check #2', () => {    
@@ -395,7 +396,7 @@ describe('GameYngine', () => {
 
             it('range 1', () => { 
                 const RANGE = 1;   
-                const range:Paths = mappyTerrainHeavy.range(calculatorTerrain, mappyTerrainHeavy.theMap.get("0,0")!, RANGE);  
+                const range:Paths = mappyTerrainHeavy.range(calculatorTerrain, mappyTerrainHeavy.theMap["0,0"]!, RANGE);  
                 let maxCost = 0;
                 range.paths.forEach((path: Path)=>{
                     maxCost = Math.max(path.cost, maxCost);
@@ -404,7 +405,7 @@ describe('GameYngine', () => {
             })   
             it('range 3', () => { 
                 const RANGE = 3;   
-                const range:Paths = mappyTerrainHeavy.range(calculatorTerrain, mappyTerrainHeavy.theMap.get("0,0")!, RANGE);  
+                const range:Paths = mappyTerrainHeavy.range(calculatorTerrain, mappyTerrainHeavy.theMap["0,0"]!, RANGE);  
                 let maxCost = 0;
                 range.paths.forEach((path: Path)=>{
                     maxCost = Math.max(path.cost, maxCost);
@@ -413,7 +414,7 @@ describe('GameYngine', () => {
             })   
             it('range 5', () => { 
                 const RANGE = 5;   
-                const range:Paths = mappyTerrainHeavy.range(calculatorTerrain, mappyTerrainHeavy.theMap.get("0,0")!, RANGE);  
+                const range:Paths = mappyTerrainHeavy.range(calculatorTerrain, mappyTerrainHeavy.theMap["0,0"]!, RANGE);  
                 let maxCost = 0;
                 range.paths.forEach((path: Path)=>{
                     maxCost = Math.max(path.cost, maxCost);
@@ -439,17 +440,17 @@ describe('GameYngine', () => {
 
             it('distance 2', () => { 
                 
-                const distance:number = mappyTerrainNoPath.distance(mappyTerrainNoPath.theMap.get("0,0")!, mappyTerrainNoPath.theMap.get("1,2")!,calculatorTerrain);                
+                const distance:number = mappyTerrainNoPath.distance(mappyTerrainNoPath.theMap["0,0"]!, mappyTerrainNoPath.theMap["1,2"]!,calculatorTerrain);                
                 return expect(distance).eq(2)
             })
             it('distance 11', () => { 
                 
-                const distance:number = mappyTerrainNoPath.distance(mappyTerrainNoPath.theMap.get("0,0")!, mappyTerrainNoPath.theMap.get("5,1")!,calculatorTerrain);                
+                const distance:number = mappyTerrainNoPath.distance(mappyTerrainNoPath.theMap["0,0"]!, mappyTerrainNoPath.theMap["5,1"]!,calculatorTerrain);                
                 return expect(distance).eq(11)
             })   
 
             it('distance path not found', () => {                 
-                return expect(()=>{mappyTerrainNoPath.distance(mappyTerrainNoPath.theMap.get("0,0")!, mappyTerrainNoPath.theMap.get("5,4")!,calculatorTerrain)}).to.throw('Path not found');                                                                      
+                return expect(()=>{mappyTerrainNoPath.distance(mappyTerrainNoPath.theMap["0,0"]!, mappyTerrainNoPath.theMap["5,4"]!,calculatorTerrain)}).to.throw('Path not found');                                                                      
             })   
 
 
@@ -509,7 +510,7 @@ describe('GameYngine', () => {
                     t: {kind: "OTHER"}                    
                 })
                 expect(mappy.tile("1,0").t.kind).eq("OTHER")
-                expect(mappy.theMap.size).eq(2)
+                expect(Object.keys(mappy.theMap).length).eq(2)
             })
             it("adds new tile",()=>{
                 mappy.put({
@@ -524,7 +525,7 @@ describe('GameYngine', () => {
                     y: 0,
                     t: {kind: "UNDEFINED"}                    
                 })
-                expect(mappy.theMap.size).eq(2)
+                expect(Object.keys(mappy.theMap).length).eq(2)
                 expect(mappy.tile("0,0").t.kind).eq("UNDEFINED")
                 expect(mappy.tile("1,0").t.kind).eq("UNDEFINED")
             })            
@@ -639,7 +640,7 @@ describe('GameYngine', () => {
             it('map size', () => {    
                 let mappy:MapHexOddQ = new MapHexOddQ(8, 5);
                 mappy.fromJson(MapsFileMocks.map_8x5);
-                return expect(Array.from(mappy.theMap).length).eq(40);                
+                return expect(Object.keys(mappy.theMap).length).eq(40);                
             })   
             
             
@@ -653,6 +654,10 @@ describe('GameYngine', () => {
                 let mappy:MapHexOddQ = new MapHexOddQ(8, 5);
                 return expect(()=>{mappy.fromJson(MapsFileMocks.map_8x5_0_tiles)}).to.throw('must contain tiles data');                              
             }) 
+            it('tiles array with 0 tiles (2)', () => {    
+                let mappy:MapHexOddQ = new MapHexOddQ(8, 5);
+                return expect(()=>{mappy.fromJson(MapsFileMocks.map_8x5_0_tiles2)}).to.throw('must contain tiles data');                              
+            })             
             it('no tiles provided', () => {    
                 let mappy:MapHexOddQ = new MapHexOddQ(8, 5);
                 return expect(()=>{mappy.fromJson(MapsFileMocks.map_8x5_no_tiles)}).to.throw('must contain tiles data');                              

@@ -718,6 +718,23 @@ export const MapsFileMocks = {
     },
     "tiles": undefined        
     },
+    map_8x5_0_tiles2: {
+      "specs": {
+          "id": "dkhsvpmudqk",
+          "name": "",
+          "kind": "HexTile",
+          "size": "8x5",
+          "tags": [
+          "8x5",
+          "HexTile"
+          ],
+          "address": "",
+          "latlon": [
+          ""
+          ]
+      },
+      "tiles": []        
+    },
     map_8x5_no_tiles: {
         "specs": {
             "id": "dkhsvpmudqk",
