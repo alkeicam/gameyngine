@@ -221,7 +221,15 @@ export abstract class MapBase {
         let pathResult: PathResult = this.pathFind(calculator, from, to, costLimit);        
         return this._traversePaths(pathResult);
     }
-
+    
+    /**
+     * Finds a shortest path from "from" to "to" tile using provided calculater (and optionally limit);
+     * @param calculator cost calculator used to calculate cost for each step along the path
+     * @param from source tile
+     * @param to target tile
+     * @param costLimit optional - when provided when number of steps exceed then no path will be returned
+     * @returns path or throws an error when no path is found
+     */
     path(calculator: CostCalculator, from:TileBase, to: TileBase,  costLimit?: number):Path{
         const paths:Paths = this.paths(calculator,from, to, costLimit);  
         if(!paths.paths.get(to))
