@@ -175,13 +175,13 @@ describe('GameYngine', () => {
                 let mappy:MapSquare = new MapSquare(6, 5);
                 mappy.fromTiles(MapsMocks.map_6x5);
                 
-                return expect(Object.keys(mappy.theMap).length).eq(30);                
+                return expect(Object.keys(mappy.tiles).length).eq(30);                
             })   
             
             it('size check', () => {    
                 let mappy:MapSquare = new MapSquare(6, 5);
                 mappy.fromTiles(MapsMocks.map_5x6);
-                return expect(Object.keys(mappy.theMap).length).eq(30);                
+                return expect(Object.keys(mappy.tiles).length).eq(30);                
             }) 
 
             it('size check #2', () => {    
@@ -396,7 +396,7 @@ describe('GameYngine', () => {
 
             it('range 1', () => { 
                 const RANGE = 1;   
-                const range:Paths = mappyTerrainHeavy.range(calculatorTerrain, mappyTerrainHeavy.theMap["0,0"]!, RANGE);  
+                const range:Paths = mappyTerrainHeavy.range(calculatorTerrain, mappyTerrainHeavy.tiles["0,0"]!, RANGE);  
                 let maxCost = 0;
                 range.paths.forEach((path: Path)=>{
                     maxCost = Math.max(path.cost, maxCost);
@@ -405,7 +405,7 @@ describe('GameYngine', () => {
             })   
             it('range 3', () => { 
                 const RANGE = 3;   
-                const range:Paths = mappyTerrainHeavy.range(calculatorTerrain, mappyTerrainHeavy.theMap["0,0"]!, RANGE);  
+                const range:Paths = mappyTerrainHeavy.range(calculatorTerrain, mappyTerrainHeavy.tiles["0,0"]!, RANGE);  
                 let maxCost = 0;
                 range.paths.forEach((path: Path)=>{
                     maxCost = Math.max(path.cost, maxCost);
@@ -414,7 +414,7 @@ describe('GameYngine', () => {
             })   
             it('range 5', () => { 
                 const RANGE = 5;   
-                const range:Paths = mappyTerrainHeavy.range(calculatorTerrain, mappyTerrainHeavy.theMap["0,0"]!, RANGE);  
+                const range:Paths = mappyTerrainHeavy.range(calculatorTerrain, mappyTerrainHeavy.tiles["0,0"]!, RANGE);  
                 let maxCost = 0;
                 range.paths.forEach((path: Path)=>{
                     maxCost = Math.max(path.cost, maxCost);
@@ -440,17 +440,17 @@ describe('GameYngine', () => {
 
             it('distance 2', () => { 
                 
-                const distance:number = mappyTerrainNoPath.distance(mappyTerrainNoPath.theMap["0,0"]!, mappyTerrainNoPath.theMap["1,2"]!,calculatorTerrain);                
+                const distance:number = mappyTerrainNoPath.distance(mappyTerrainNoPath.tiles["0,0"]!, mappyTerrainNoPath.tiles["1,2"]!,calculatorTerrain);                
                 return expect(distance).eq(2)
             })
             it('distance 11', () => { 
                 
-                const distance:number = mappyTerrainNoPath.distance(mappyTerrainNoPath.theMap["0,0"]!, mappyTerrainNoPath.theMap["5,1"]!,calculatorTerrain);                
+                const distance:number = mappyTerrainNoPath.distance(mappyTerrainNoPath.tiles["0,0"]!, mappyTerrainNoPath.tiles["5,1"]!,calculatorTerrain);                
                 return expect(distance).eq(11)
             })   
 
             it('distance path not found', () => {                 
-                return expect(()=>{mappyTerrainNoPath.distance(mappyTerrainNoPath.theMap["0,0"]!, mappyTerrainNoPath.theMap["5,4"]!,calculatorTerrain)}).to.throw('Path not found');                                                                      
+                return expect(()=>{mappyTerrainNoPath.distance(mappyTerrainNoPath.tiles["0,0"]!, mappyTerrainNoPath.tiles["5,4"]!,calculatorTerrain)}).to.throw('Path not found');                                                                      
             })   
 
 
@@ -510,7 +510,7 @@ describe('GameYngine', () => {
                     t: {kind: "OTHER"}                    
                 })
                 expect(mappy.tile("1,0").t.kind).eq("OTHER")
-                expect(Object.keys(mappy.theMap).length).eq(2)
+                expect(Object.keys(mappy.tiles).length).eq(2)
             })
             it("adds new tile",()=>{
                 mappy.put({
@@ -525,7 +525,7 @@ describe('GameYngine', () => {
                     y: 0,
                     t: {kind: "UNDEFINED"}                    
                 })
-                expect(Object.keys(mappy.theMap).length).eq(2)
+                expect(Object.keys(mappy.tiles).length).eq(2)
                 expect(mappy.tile("0,0").t.kind).eq("UNDEFINED")
                 expect(mappy.tile("1,0").t.kind).eq("UNDEFINED")
             })            
@@ -579,7 +579,7 @@ describe('GameYngine', () => {
                 tile.t.kind = "SOME_NEW_KIND";
                 // mappy.put(tile);
                 // and check copy
-                expect(newMap.theMap.size).eq(mappy.theMap.size);
+                expect(newMap.tiles.size).eq(mappy.tiles.size);
                 expect(newMap.tile("0,0").t.kind).not.equal("SOME_NEW_KIND");
                 
             })
@@ -640,7 +640,7 @@ describe('GameYngine', () => {
             it('map size', () => {    
                 let mappy:MapHexOddQ = new MapHexOddQ(8, 5);
                 mappy.fromJson(MapsFileMocks.map_8x5);
-                return expect(Object.keys(mappy.theMap).length).eq(40);                
+                return expect(Object.keys(mappy.tiles).length).eq(40);                
             })   
             
             
@@ -808,7 +808,8 @@ describe('GameYngine', () => {
                 tile.t.kind = "SOME_NEW_KIND";
                 // mappy.put(tile);
                 // and check copy
-                expect(newMap.theMap.size).eq(mappy.theMap.size);
+                expect(Object.values(newMap.tiles).length).eq(6*5);
+                expect(Object.values(newMap.tiles).length).eq(Object.values(mappy.tiles).length);
                 expect(newMap.tile("0,0").t.kind).not.equal("SOME_NEW_KIND");
                 
             })

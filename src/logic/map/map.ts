@@ -55,13 +55,13 @@ export abstract class MapBase {
     CONST_COST = 1;
     CONST_PATH_NOT_FOUND_COST = Number.MAX_SAFE_INTEGER;
 
-    theMap:MapTiles;
+    tiles:MapTiles;
     width: number;
     height: number;
  
 
     constructor(height: number, width: number){
-        this.theMap = {};
+        this.tiles = {};
         this.width = width;
         this.height = height
     }
@@ -72,7 +72,7 @@ export abstract class MapBase {
     abstract deepCopy():MapBase;
 
     tile(id:string):TileBase{
-        const tile =  this.theMap[id];
+        const tile =  this.tiles[id];
         if(!tile)
             throw new Error(`Tile not found ${id}`);
 
@@ -86,7 +86,7 @@ export abstract class MapBase {
             throw new Error("Invalid arguments");  
 
         tiles.forEach((item:TileBase)=>{
-            this.theMap[item.id] =  item;
+            this.tiles[item.id] =  item;
         })
         
     }
@@ -114,7 +114,7 @@ export abstract class MapBase {
             throw new Error(`Can't add tile ${tile.id} as it's y position ${tile.y} violates map size 0,${this.height}.`)
         
         // will add new or replace existing tile
-        this.theMap[tile.id] = tile;
+        this.tiles[tile.id] = tile;
         
     }
 
@@ -313,7 +313,7 @@ export class MapSquare extends MapBase {
 
     deepCopy():MapSquare{
         const newMap = new MapSquare(this.height, this.width);        
-        for (const [_key, value] of Object.entries(this.theMap)) {
+        for (const [_key, value] of Object.entries(this.tiles)) {
             // console.log(`${key}: ${value}`);
             newMap.put(JSON.parse(JSON.stringify(value)));
         }
@@ -335,7 +335,7 @@ export class MapSquare extends MapBase {
         const originTile: TileBase = <TileBase>origin;     
         
 
-        for (const [_key, item] of Object.entries(this.theMap)) {
+        for (const [_key, item] of Object.entries(this.tiles)) {
         
         // this.theMap.forEach((item:TileBase)=>{
             const tile:TileBase = <TileBase> item;
@@ -448,7 +448,7 @@ export class MapHexOddQ extends MapBase {
 
     deepCopy():MapHexOddQ{
         const newMap = new MapHexOddQ(this.height, this.width);
-        for (const [_key, value] of Object.entries(this.theMap)) {
+        for (const [_key, value] of Object.entries(this.tiles)) {
 
         // this.theMap.forEach((value)=>{
             newMap.put(JSON.parse(JSON.stringify(value)));
@@ -481,7 +481,7 @@ export class MapHexOddQ extends MapBase {
         // }
 
         let notNeighbours = []
-        for (const [_key, item] of Object.entries(this.theMap)) {
+        for (const [_key, item] of Object.entries(this.tiles)) {
         // this.theMap.forEach((item:TileBase)=>{
             const tile:TileBase = <TileBase> item;
             //distance on each x,y <=1
